@@ -1,0 +1,40 @@
+---
+title: "Tidy your time series analysis <br> with tsibble"
+type: "seminar"
+author: "<br> Earo Wang <br> <i class='fab fa-twitter' style='color:#6CADDE'></i> <i class='fab fa-github'></i> @earowang"
+date: "4 October 2018 <br> slides at <http://slides.earo.me/bigapple>"
+output:
+  xaringan::moon_reader:
+    css: ["default", "remark.css"]
+    self_contained: false
+    nature:
+      ratio: 16:9
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+---
+
+```{r initial, echo = FALSE, cache = FALSE, results = 'hide'}
+library(knitr)
+options(htmltools.dir.version = FALSE, tibble.width = 60, tibble.print_min = 6)
+opts_chunk$set(
+  echo = FALSE, warning = FALSE, message = FALSE, comment = "#>",
+  fig.path = 'figure/', cache.path = 'cache/', fig.align = 'center', 
+  fig.width = 12, fig.show = 'hold', fig.height = 8.5, # 16:9
+  cache = TRUE, external = TRUE, dev = 'svglite'
+)
+read_chunk('R/theme.R')
+```
+
+```{r theme-remark}
+```
+
+---
+
+class: inverse middle center
+
+### Slides created via xaringan `r emo::ji("crossed_swords")` <http://slides.earo.me/bigapple>
+
+### Open source <https://github.com/earowang/bigapple>
+
+### This work is under licensed [<i class="fab fa-creative-commons"></i> BY-NC 4.0](https://creativecommons.org/licenses/by-nc/4.0/).
