@@ -5,6 +5,7 @@
     <meta charset="utf-8">
     <meta name="author" content="  Earo Wang     @earowang" />
     <link href="index_files/remark-css/default.css" rel="stylesheet" />
+    <link href="index_files/font-awesome/css/fontawesome-all.min.css" rel="stylesheet" />
     <link rel="stylesheet" href="remark.css" type="text/css" />
   </head>
   <body>
@@ -22,11 +23,730 @@ class: center, middle, inverse, title-slide
 
 
 
+
+
+
+
+
+
+background-image: url(figure/map-airlines-1.svg)
+background-size: cover
+
+class: bottom center
+
+# 2017 US airline traffic
+
+*data source: [US Bureau of Transportation Statistics](https://www.transtats.bts.gov/DL_SelectFields.asp?Table_ID=236)*
+
+---
+
+.left-column[
+&lt;br&gt;
+&lt;br&gt;
+&lt;br&gt;
+&lt;br&gt;
+&lt;br&gt;
+&lt;br&gt;
+&lt;br&gt;
+## A glimpse
+]
+.right-column[
+
+```r
+glimpse(flights)
+```
+
+```
+#&gt; Observations: 5,548,444
+#&gt; Variables: 22
+#&gt; $ flight              &lt;chr&gt; "AA494", "AA494", "AA494", ...
+#&gt; $ sched_dep_datetime  &lt;dttm&gt; 2017-01-17 16:19:00, 2017-...
+#&gt; $ sched_arr_datetime  &lt;dttm&gt; 2017-01-17 18:56:00, 2017-...
+#&gt; $ dep_delay           &lt;dbl&gt; -3, -5, -8, 37, 13, 17, -3,...
+#&gt; $ arr_delay           &lt;dbl&gt; -14, -35, -30, 33, 2, 25, 1...
+#&gt; $ carrier             &lt;chr&gt; "AA", "AA", "AA", "AA", "AA...
+#&gt; $ tailnum             &lt;chr&gt; "N583AA", "N544AA", "N553AA...
+#&gt; $ origin              &lt;chr&gt; "CLT", "CLT", "CLT", "CLT",...
+#&gt; $ dest                &lt;chr&gt; "PHX", "PHX", "PHX", "PHX",...
+#&gt; $ air_time            &lt;dbl&gt; 244, 228, 236, 252, 245, 25...
+#&gt; $ distance            &lt;dbl&gt; 1773, 1773, 1773, 1773, 177...
+#&gt; $ origin_city_name    &lt;chr&gt; "Charlotte", "Charlotte", "...
+#&gt; $ origin_state        &lt;chr&gt; "NC", "NC", "NC", "NC", "NC...
+#&gt; $ dest_city_name      &lt;chr&gt; "Phoenix", "Phoenix", "Phoe...
+#&gt; $ dest_state          &lt;chr&gt; "AZ", "AZ", "AZ", "AZ", "AZ...
+#&gt; $ taxi_out            &lt;dbl&gt; 17, 13, 17, 18, 17, 27, 20,...
+#&gt; $ taxi_in             &lt;dbl&gt; 5, 6, 2, 3, 4, 4, 7, 6, 5, ...
+#&gt; $ carrier_delay       &lt;dbl&gt; NA, NA, NA, 33, NA, 0, NA, ...
+#&gt; $ weather_delay       &lt;dbl&gt; NA, NA, NA, 0, NA, 0, NA, N...
+#&gt; $ nas_delay           &lt;dbl&gt; NA, NA, NA, 0, NA, 8, NA, N...
+#&gt; $ security_delay      &lt;dbl&gt; NA, NA, NA, 0, NA, 0, NA, N...
+#&gt; $ late_aircraft_delay &lt;dbl&gt; NA, NA, NA, 0, NA, 17, NA, ...
+```
+]
+
+---
+
+.pull-left[
+* heterogeneous data types
+* irregular time interval
+]
+.pull-right[
+* multiple measured variables
+* multiple grouping variables
+]
+
+```
+#&gt; # A tibble: 5,548,444 x 22
+#&gt;   flight sched_dep_datetime  sched_arr_datetime  dep_delay arr_delay
+#&gt;   &lt;chr&gt;  &lt;dttm&gt;              &lt;dttm&gt;                  &lt;dbl&gt;     &lt;dbl&gt;
+#&gt; 1 AA494  2017-01-17 16:19:00 2017-01-17 18:56:00        -3       -14
+#&gt; 2 AA494  2017-01-18 16:19:00 2017-01-18 18:56:00        -5       -35
+#&gt; 3 AA494  2017-01-19 16:19:00 2017-01-19 18:56:00        -8       -30
+#&gt; 4 AA494  2017-01-20 16:19:00 2017-01-20 18:56:00        37        33
+#&gt; 5 AA494  2017-01-21 16:19:00 2017-01-21 18:56:00        13         2
+#&gt; 6 AA494  2017-01-22 16:19:00 2017-01-22 18:56:00        17        25
+#&gt;   carrier tailnum origin dest  air_time distance origin_city_name
+#&gt;   &lt;chr&gt;   &lt;chr&gt;   &lt;chr&gt;  &lt;chr&gt;    &lt;dbl&gt;    &lt;dbl&gt; &lt;chr&gt;           
+#&gt; 1 AA      N583AA  CLT    PHX        244     1773 Charlotte       
+#&gt; 2 AA      N544AA  CLT    PHX        228     1773 Charlotte       
+#&gt; 3 AA      N553AA  CLT    PHX        236     1773 Charlotte       
+#&gt; 4 AA      N191AA  CLT    PHX        252     1773 Charlotte       
+#&gt; 5 AA      N170AA  CLT    PHX        245     1773 Charlotte       
+#&gt; 6 AA      N179AA  CLT    PHX        254     1773 Charlotte       
+#&gt; # ... with 5.548e+06 more rows, and 10 more variables: origin_state &lt;chr&gt;,
+#&gt; #   dest_city_name &lt;chr&gt;, dest_state &lt;chr&gt;, taxi_out &lt;dbl&gt;, taxi_in &lt;dbl&gt;,
+#&gt; #   carrier_delay &lt;dbl&gt;, weather_delay &lt;dbl&gt;, nas_delay &lt;dbl&gt;,
+#&gt; #   security_delay &lt;dbl&gt;, late_aircraft_delay &lt;dbl&gt;
+```
+
+---
+
+.pull-left[
+&lt;br&gt;
+&lt;br&gt;
+&lt;br&gt;
+&lt;br&gt;
+&lt;br&gt;
+&lt;br&gt;
+&lt;br&gt;
+## Get ready for time series analysis?
+]
+
+--
+
+.pull-right[
+&lt;br&gt;
+&lt;br&gt;
+&lt;br&gt;
+&lt;br&gt;
+&lt;br&gt;
+This data set doesn't fit into:
+
+.x[
+* `ts()`
+* `zoo()`
+* `xts()`
+]
+
+The underlying structure is a matrix of numeric data with an implicit time index.
+]
+
+---
+
+.pull-left[
+&lt;br&gt;
+&lt;br&gt;
+&lt;br&gt;
+&lt;br&gt;
+&lt;br&gt;
+&lt;br&gt;
+&lt;br&gt;
+## Get ready for time series analysis?
+]
+
+.pull-right[
+&lt;br&gt;
+&lt;br&gt;
+&lt;br&gt;
+&lt;br&gt;
+&lt;br&gt;
+.animated.hinge[
+This data set doesn't fit into:
+
+.x[
+* `ts()`
+* `zoo()`
+* `xts()`
+]
+
+The underlying structure is a matrix of numeric data with an implicit time index.
+]
+]
+
+---
+
+.pull-left[
+&lt;br&gt;
+&lt;br&gt;
+&lt;br&gt;
+&lt;br&gt;
+&lt;br&gt;
+&lt;br&gt;
+&lt;br&gt;
+## Get ready for time series analysis?
+]
+
+.pull-right[
+&lt;br&gt;
+&lt;br&gt;
+&lt;br&gt;
+&lt;br&gt;
+.animated.bounceInDown[
+.center[&lt;img src="img/tsibble.png" height=250px&gt;]
+]
+]
+
+---
+
+class: inverse middle center
+
+.animated.fadeIn[
+url(https://imgs.xkcd.com/comics/standards.png)
+]
+.footnote[
+.red[reference:] [XKCD on "standards"](https://xkcd.com/927/)
+]
+
+---
+
+.left-column[
+&lt;br&gt;
+&lt;br&gt;
+&lt;br&gt;
+&lt;br&gt;
+&lt;br&gt;
+&lt;br&gt;
+## What makes a tsibble?
+]
+.right-column[
+.pull-left[
+&lt;br&gt;
+.center[
+&lt;img src="img/tibble.png" height=180px&gt;
+
+&lt;i class="fas fa-arrow-down"&gt;&lt;/i&gt;
+
+&lt;img src="img/tsibble.png" height=180px&gt;
+]
+]
+.pull-right[
+&lt;br&gt;
+&lt;br&gt;
+&lt;br&gt;
+&lt;br&gt;
+&lt;br&gt;
+&lt;br&gt;
+tsibble leverages tibble along with time domain semantics: **index** and **key**.
+]
+]
+
+---
+
+.left-column[
+## What makes a tsibble?
+### - index
+]
+.right-column[
+
+```r
+us_flights &lt;- flights %&gt;% 
+  as_tsibble(
+    index = sched_dep_datetime, key = id(flight, origin), 
+    regular = FALSE
+  )
+```
+* Supported index types:
+  + `POSIXct`, `Date` &amp; `nanotime`
+  + `yearweek`, `yearmonth` &amp; `yearquarter`
+  + `integer`/`double`
+* Extensible: define `index_valid()` for custom types
+]
+
+---
+
+.left-column[
+## What makes a tsibble?
+### - index
+### - key
+]
+.right-column[
+What's your observational unit over time?
+
+
+```r
+us_flights &lt;- flights %&gt;% 
+  as_tsibble(
+    index = sched_dep_datetime, key = id(flight, origin), 
+    regular = FALSE
+  )
+```
+
+* Key created via `id()` (identifier)
+  + *empty:* univariate time series (implicitit key)
+  + *single:* univariate or multivariate time series
+  + *multiple:* nested and crossed structures `id(flight, origin | origin_city | orgin_state)`
+
+**tsibble is strict: dinstinct rows identified by index and key.** Use `validate = FALSE` to skip the checks, if you're sure it's a valid input.
+]
+
+---
+
+.left-column[
+## What makes a tsibble?
+### - index
+### - key
+### - interval
+]
+.right-column[
+Free from specifying time frequency
+
+
+```r
+us_flights &lt;- flights %&gt;% 
+  as_tsibble(
+    index = sched_dep_datetime, key = id(flight, origin), 
+    regular = FALSE
+  )
+```
+
+When `regular = TRUE` (by default), it automatically recognizes the time interval based on the index representation from year to day, to nanosecond.
+
+But if you wanna specify the interval, check out the low-level constructor `build_tsibble()`.
+]
+
+---
+
+.left-column[
+## What makes a tsibble?
+### - index
+### - key
+### - interval
+### - tsibble
+]
+.right-column[
+**Arranging the key and index from past to future**
+
+```r
+us_flights
+```
+
+```
+#&gt; # A tsibble: 5,548,444 x 22 [!]
+#&gt; # Key:       flight, origin [161,976]
+#&gt;   flight sched_dep_datetime  sched_arr_datetime  dep_delay
+#&gt;   &lt;chr&gt;  &lt;dttm&gt;              &lt;dttm&gt;                  &lt;dbl&gt;
+#&gt; 1 AA1    2017-01-01 08:00:00 2017-01-01 11:42:00        31
+#&gt; 2 AA1    2017-01-02 08:00:00 2017-01-02 11:42:00        -3
+#&gt; 3 AA1    2017-01-03 08:00:00 2017-01-03 11:42:00        -6
+#&gt; 4 AA1    2017-01-04 08:00:00 2017-01-04 11:42:00        -3
+#&gt; 5 AA1    2017-01-05 08:00:00 2017-01-05 11:42:00        -7
+#&gt; 6 AA1    2017-01-06 08:00:00 2017-01-06 11:42:00        -3
+#&gt; # ... with 5.548e+06 more rows, and 18 more variables:
+#&gt; #   arr_delay &lt;dbl&gt;, carrier &lt;chr&gt;, tailnum &lt;chr&gt;,
+#&gt; #   origin &lt;chr&gt;, dest &lt;chr&gt;, air_time &lt;dbl&gt;,
+#&gt; #   distance &lt;dbl&gt;, origin_city_name &lt;chr&gt;,
+#&gt; #   origin_state &lt;chr&gt;, dest_city_name &lt;chr&gt;,
+#&gt; #   dest_state &lt;chr&gt;, taxi_out &lt;dbl&gt;, taxi_in &lt;dbl&gt;,
+#&gt; #   carrier_delay &lt;dbl&gt;, weather_delay &lt;dbl&gt;,
+#&gt; #   nas_delay &lt;dbl&gt;, security_delay &lt;dbl&gt;,
+#&gt; #   late_aircraft_delay &lt;dbl&gt;
+```
+]
+
+---
+
+class: inverse middle center
+
+&lt;img src="img/tsibble.png" height=150px&gt;
+
+## standing on the shoulders of giants
+
+.animated.bounceInRight[
+
+```
+⬢ __  _    __   .    ⬡           ⬢  . 
+ / /_(_)__/ /_ ___  _____ _______ ___ 
+/ __/ / _  / // / |/ / -_) __(_-&lt;/ -_)
+\__/_/\_,_/\_, /|___/\__/_/ /___/\__/ 
+     ⬢  . /___/      ⬡      .       ⬢ 
+```
+]
+
+???
+
+Stay tight with tidyverse verbs, only introduce necessary new verbs.
+
+---
+
+.left-column[
+## Verbs
+### - filter
+]
+.right-column[
+
+```r
+us_flights %&gt;% 
+  filter(sched_dep_datetime &lt; yearmonth("201703"))
+```
+
+```
+#&gt; # A tsibble: 821,912 x 22 [!]
+#&gt; # Key:       flight, origin [46,960]
+#&gt;   flight sched_dep_datetime  sched_arr_datetime  dep_delay
+#&gt;   &lt;chr&gt;  &lt;dttm&gt;              &lt;dttm&gt;                  &lt;dbl&gt;
+#&gt; 1 AA1    2017-01-01 08:00:00 2017-01-01 11:42:00        31
+#&gt; 2 AA1    2017-01-02 08:00:00 2017-01-02 11:42:00        -3
+#&gt; 3 AA1    2017-01-03 08:00:00 2017-01-03 11:42:00        -6
+#&gt; 4 AA1    2017-01-04 08:00:00 2017-01-04 11:42:00        -3
+#&gt; 5 AA1    2017-01-05 08:00:00 2017-01-05 11:42:00        -7
+#&gt; 6 AA1    2017-01-06 08:00:00 2017-01-06 11:42:00        -3
+#&gt; # ... with 8.219e+05 more rows, and 18 more variables:
+#&gt; #   arr_delay &lt;dbl&gt;, carrier &lt;chr&gt;, tailnum &lt;chr&gt;,
+#&gt; #   origin &lt;chr&gt;, dest &lt;chr&gt;, air_time &lt;dbl&gt;,
+#&gt; #   distance &lt;dbl&gt;, origin_city_name &lt;chr&gt;,
+#&gt; #   origin_state &lt;chr&gt;, dest_city_name &lt;chr&gt;,
+#&gt; #   dest_state &lt;chr&gt;, taxi_out &lt;dbl&gt;, taxi_in &lt;dbl&gt;,
+#&gt; #   carrier_delay &lt;dbl&gt;, weather_delay &lt;dbl&gt;,
+#&gt; #   nas_delay &lt;dbl&gt;, security_delay &lt;dbl&gt;,
+#&gt; #   late_aircraft_delay &lt;dbl&gt;
+```
+]
+
+---
+
+.left-column[
+## Verbs
+### - filter
+### - select
+]
+.right-column[
+Keep the index hang around with the tsibble
+
+
+```r
+us_flights %&gt;% 
+  select(flight, dep_delay)
+```
+
+```
+#&gt; # A tsibble: 5,548,444 x 3 [!]
+#&gt; # Key:       flight [22,562]
+#&gt;   flight dep_delay sched_dep_datetime 
+#&gt;   &lt;chr&gt;      &lt;dbl&gt; &lt;dttm&gt;             
+#&gt; 1 AA1           31 2017-01-01 08:00:00
+#&gt; 2 AA1           -3 2017-01-02 08:00:00
+#&gt; 3 AA1           -6 2017-01-03 08:00:00
+#&gt; 4 AA1           -3 2017-01-04 08:00:00
+#&gt; 5 AA1           -7 2017-01-05 08:00:00
+#&gt; 6 AA1           -3 2017-01-06 08:00:00
+#&gt; # ... with 5.548e+06 more rows
+```
+
+OR *consciously* leave off the time context by using `.drop = TRUE` or `as_tibble()`.
+]
+
+---
+
+.left-column[
+## Verbs
+### - filter
+### - select
+### - summarise
+]
+.right-column[
+Aggregate over time
+
+```r
+us_flights %&gt;% 
+  summarise(avg_delay = mean(dep_delay))
+```
+
+```
+#&gt; # A tsibble: 393,009 x 2 [!]
+#&gt;   sched_dep_datetime  avg_delay
+#&gt;   &lt;dttm&gt;                  &lt;dbl&gt;
+#&gt; 1 2017-01-01 00:14:00     -5   
+#&gt; 2 2017-01-01 00:15:00     -6.67
+#&gt; 3 2017-01-01 00:20:00     -3   
+#&gt; 4 2017-01-01 00:21:00     17   
+#&gt; 5 2017-01-01 00:30:00     -1   
+#&gt; 6 2017-01-01 00:35:00     -4.5 
+#&gt; # ... with 3.93e+05 more rows
+```
+Utilize the context and reduce typing, compared to:
+```r
+flights %&gt;% 
+  group_by(sched_dep_datetime) %&gt;% 
+  summarise(avg_delay = mean(dep_delay))
+```
+
+]
+
+---
+
+.left-column[
+## Verbs
+### - filter
+### - select
+### - summarise
+### - index_by*
+]
+.right-column[
+
+```r
+us_flights %&gt;% 
+  index_by(
+    dep_datehour = floor_date(sched_dep_datetime, unit = "hour")
+  ) %&gt;% 
+  summarise(avg_delay = mean(dep_delay))
+```
+
+```
+#&gt; # A tsibble: 8,004 x 2 [1h]
+#&gt;   dep_datehour        avg_delay
+#&gt;   &lt;dttm&gt;                  &lt;dbl&gt;
+#&gt; 1 2017-01-01 00:00:00    -0.367
+#&gt; 2 2017-01-01 01:00:00    19.5  
+#&gt; 3 2017-01-01 02:00:00     2.8  
+#&gt; 4 2017-01-01 05:00:00     6.71 
+#&gt; 5 2017-01-01 06:00:00     6.75 
+#&gt; 6 2017-01-01 07:00:00     6.83 
+#&gt; # ... with 7,998 more rows
+```
+* `year()` for yearly aggregation, `yearquarter()` for quarterly, `yearmonth()` for monthly, `yearweek()` for weekly
+* many other lubridate friends
+]
+
+---
+
+class: middle center inverse
+
+background-image: url(img/lego.jpg)
+background: cover
+
+## .bg-col[Glue individual blocks &lt;br&gt; to compose a pipeline]
+
+---
+
+## Upper-tail departure delay performance
+
+
+```r
+hr_qtl &lt;- us_flights %&gt;% 
+  index_by(dep_datehour = floor_date(sched_dep_datetime, unit = "hour")) %&gt;% 
+  summarise(    
+    qtl50 = quantile(dep_delay, 0.5),
+    qtl80 = quantile(dep_delay, 0.8),
+    qtl95 = quantile(dep_delay, 0.95)
+  ) %&gt;% 
+  mutate(
+    hour = hour(dep_datehour), 
+    wday = wday(dep_datehour, label = TRUE, week_start = 1),
+    date = as_date(dep_datehour)
+  ) %&gt;% 
+  gather(key = qtl, value = dep_delay, qtl50:qtl95)
+```
+
+---
+
+&lt;img src="figure/draw-qtl-1.svg" style="display: block; margin: auto;" /&gt;
+
+---
+
+.block[
+.flowchart[
+* `index_by() + summarise()` &lt;br&gt; aggregate to hourly data
+]
+]
+
+```r
+us_flights %&gt;% 
+* index_by(dep_datehour = floor_date(sched_dep_datetime, unit = "hour")) %&gt;% 
+* summarise(    
+*   qtl50 = quantile(dep_delay, 0.5),
+*   qtl80 = quantile(dep_delay, 0.8),
+*   qtl95 = quantile(dep_delay, 0.95)
+* )
+```
+
+
+
+```
+#&gt; # A tsibble: 8,004 x 4 [1h]
+#&gt;   dep_datehour        qtl50 qtl80 qtl95
+#&gt;   &lt;dttm&gt;              &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+#&gt; 1 2017-01-01 00:00:00  -3.5   2.6  17.5
+#&gt; 2 2017-01-01 01:00:00  -2    28.4 111. 
+#&gt; 3 2017-01-01 02:00:00  -7    21.6  23.4
+#&gt; 4 2017-01-01 05:00:00  -2     3    29.1
+#&gt; 5 2017-01-01 06:00:00  -3     2.2  39.8
+#&gt; 6 2017-01-01 07:00:00  -2     5    51  
+#&gt; # ... with 7,998 more rows
+```
+
+---
+
+.block[
+.flowchart[
+* `index_by() + summarise()` &lt;br&gt; aggregate to hourly data
+* `mutate()` &lt;br&gt; create new variables
+]
+]
+
+```r
+us_flights %&gt;% 
+  index_by(dep_datehour = floor_date(sched_dep_datetime, unit = "hour")) %&gt;% 
+  summarise(    
+    qtl50 = quantile(dep_delay, 0.5),
+    qtl80 = quantile(dep_delay, 0.8),
+    qtl95 = quantile(dep_delay, 0.95)
+  ) %&gt;% 
+* mutate(
+*   hour = hour(dep_datehour), 
+*   wday = wday(dep_datehour, label = TRUE, week_start = 1),
+*   date = as_date(dep_datehour)
+* )
+```
+
+
+```
+#&gt; # A tsibble: 8,004 x 7 [1h]
+#&gt;   dep_datehour        qtl50 qtl80 qtl95  hour wday 
+#&gt;   &lt;dttm&gt;              &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;int&gt; &lt;ord&gt;
+#&gt; 1 2017-01-01 00:00:00  -3.5   2.6  17.5     0 Sun  
+#&gt; 2 2017-01-01 01:00:00  -2    28.4 111.      1 Sun  
+#&gt; 3 2017-01-01 02:00:00  -7    21.6  23.4     2 Sun  
+#&gt; 4 2017-01-01 05:00:00  -2     3    29.1     5 Sun  
+#&gt; 5 2017-01-01 06:00:00  -3     2.2  39.8     6 Sun  
+#&gt; 6 2017-01-01 07:00:00  -2     5    51       7 Sun  
+#&gt; # ... with 7,998 more rows, and 1 more variable:
+#&gt; #   date &lt;date&gt;
+```
+
+---
+
+.block[
+.flowchart[
+* `index_by() + summarise()` &lt;br&gt; aggregate to hourly data
+* `mutate()` &lt;br&gt; create new variables
+* `gather()` &lt;br&gt; melt to long form
+]
+]
+
+```r
+us_flights %&gt;% 
+  index_by(dep_datehour = floor_date(sched_dep_datetime, unit = "hour")) %&gt;% 
+  summarise(    
+    qtl50 = quantile(dep_delay, 0.5),
+    qtl80 = quantile(dep_delay, 0.8),
+    qtl95 = quantile(dep_delay, 0.95)
+  ) %&gt;% 
+  mutate(
+    hour = hour(dep_datehour), 
+    wday = wday(dep_datehour, label = TRUE, week_start = 1),
+    date = as_date(dep_datehour)
+  ) %&gt;% 
+* gather(key = qtl, value = dep_delay, qtl50:qtl95)
+```
+
+
+
+```
+#&gt; # A tsibble: 24,012 x 6 [1h]
+#&gt; # Key:       qtl [3]
+#&gt;   dep_datehour         hour wday  date       qtl   dep_delay
+#&gt;   &lt;dttm&gt;              &lt;int&gt; &lt;ord&gt; &lt;date&gt;     &lt;chr&gt;     &lt;dbl&gt;
+#&gt; 1 2017-01-01 00:00:00     0 Sun   2017-01-01 qtl50      -3.5
+#&gt; 2 2017-01-01 01:00:00     1 Sun   2017-01-01 qtl50      -2  
+#&gt; 3 2017-01-01 02:00:00     2 Sun   2017-01-01 qtl50      -7  
+#&gt; 4 2017-01-01 05:00:00     5 Sun   2017-01-01 qtl50      -2  
+#&gt; 5 2017-01-01 06:00:00     6 Sun   2017-01-01 qtl50      -3  
+#&gt; 6 2017-01-01 07:00:00     7 Sun   2017-01-01 qtl50      -2  
+#&gt; # ... with 2.401e+04 more rows
+```
+
+---
+
+## A suite of window functions
+
+.pull-left[
+* `slide()`/`slide2()`/`pslide()`: sliding window with overlapping observations
+]
+
+.pull-right[
+![](img/slide.gif)
+]
+
+---
+
+## A suite of window functions
+
+.pull-left[
+* `slide()`/`slide2()`/`pslide()`: sliding window with overlapping observations
+
+
+* `tile()`/`tile2()`/`ptile()`: tiling window without overlapping observations
+]
+
+.pull-right[
+![](img/slide.gif)
+![](img/tile.gif)
+]
+
+---
+
+## A suite of window functions
+
+.pull-left[
+* `slide()`/`slide2()`/`pslide()`: sliding window with overlapping observations
+
+
+* `tile()`/`tile2()`/`ptile()`: tiling window without overlapping observations
+  
+
+* `stretch()`/`stretch2()`/`pstretch()`: fixing an initial window and expanding to include more observations
+]
+
+.pull-right[
+![](img/slide.gif)
+![](img/tile.gif)
+![](img/stretch.gif)
+]
+
+&lt;hr&gt;
+
+Type-stable: `slide()`/`tile()`/`stretch()` (a list) <i class="fas  fa-plus "></i> other variants: `*_dbl()`, `*_int()`, `*_lgl()`, `*_chr()`
+
+---
+
+class: inverse middle center
+
+## One more thing ...
+
+---
+
+background-image: url(img/tidyverts.png)
+background-size: 65%
+
+## tidyverts.org
+
 ---
 
 class: inverse middle center
 
 ### Slides created via xaringan ⚔️ &lt;http://slides.earo.me/bigapple&gt;
+
+### More about tsibble &lt;http://pkg.earo.me/tsibble&gt;
 
 ### Open source &lt;https://github.com/earowang/bigapple&gt;
 

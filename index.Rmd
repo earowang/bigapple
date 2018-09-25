@@ -24,16 +24,516 @@ opts_chunk$set(
   cache = TRUE, external = TRUE, dev = 'svglite'
 )
 read_chunk('R/theme.R')
+read_chunk('R/flights.R')
 ```
 
 ```{r theme-remark}
 ```
+
+```{r load-pkgs}
+```
+
+```{r load-data}
+```
+
+```{r map-airlines, fig.width = 12, fig.height = 8, fig.show = "hide"}
+```
+
+background-image: url(`r fig_chunk("map-airlines", "svg")`)
+background-size: cover
+
+class: bottom center
+
+# 2017 US airline traffic
+
+*data source: [US Bureau of Transportation Statistics](https://www.transtats.bts.gov/DL_SelectFields.asp?Table_ID=236)*
+
+---
+
+.left-column[
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+## A glimpse
+]
+.right-column[
+```{r glimpse, echo = TRUE}
+```
+]
+
+---
+
+.pull-left[
+* heterogeneous data types
+* irregular time interval
+]
+.pull-right[
+* multiple measured variables
+* multiple grouping variables
+]
+```{r print}
+```
+
+---
+
+.pull-left[
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+## Get ready for time series analysis?
+]
+
+--
+
+.pull-right[
+<br>
+<br>
+<br>
+<br>
+<br>
+This data set doesn't fit into:
+
+.x[
+* `ts()`
+* `zoo()`
+* `xts()`
+]
+
+The underlying structure is a matrix of numeric data with an implicit time index.
+]
+
+---
+
+.pull-left[
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+## Get ready for time series analysis?
+]
+
+.pull-right[
+<br>
+<br>
+<br>
+<br>
+<br>
+.animated.hinge[
+This data set doesn't fit into:
+
+.x[
+* `ts()`
+* `zoo()`
+* `xts()`
+]
+
+The underlying structure is a matrix of numeric data with an implicit time index.
+]
+]
+
+---
+
+.pull-left[
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+## Get ready for time series analysis?
+]
+
+.pull-right[
+<br>
+<br>
+<br>
+<br>
+.animated.bounceInDown[
+.center[<img src="img/tsibble.png" height=250px>]
+]
+]
+
+---
+
+class: inverse middle center
+
+.animated.fadeIn[
+url(https://imgs.xkcd.com/comics/standards.png)
+]
+.footnote[
+.red[reference:] [XKCD on "standards"](https://xkcd.com/927/)
+]
+
+---
+
+.left-column[
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+## What makes a tsibble?
+]
+.right-column[
+.pull-left[
+<br>
+.center[
+<img src="img/tibble.png" height=180px>
+
+<i class="fas fa-arrow-down"></i>
+
+<img src="img/tsibble.png" height=180px>
+]
+]
+.pull-right[
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+tsibble leverages tibble along with time domain semantics: **index** and **key**.
+]
+]
+
+---
+
+.left-column[
+## What makes a tsibble?
+### - index
+]
+.right-column[
+```{r tsibble, echo = TRUE}
+```
+* Supported index types:
+  + `POSIXct`, `Date` & `nanotime`
+  + `yearweek`, `yearmonth` & `yearquarter`
+  + `integer`/`double`
+* Extensible: define `index_valid()` for custom types
+]
+
+---
+
+.left-column[
+## What makes a tsibble?
+### - index
+### - key
+]
+.right-column[
+What's your observational unit over time?
+
+```{r tsibble, echo = TRUE}
+```
+
+* Key created via `id()` (identifier)
+  + *empty:* univariate time series (implicitit key)
+  + *single:* univariate or multivariate time series
+  + *multiple:* nested and crossed structures `id(flight, origin | origin_city | orgin_state)`
+
+**tsibble is strict: dinstinct rows identified by index and key.** Use `validate = FALSE` to skip the checks, if you're sure it's a valid input.
+]
+
+---
+
+.left-column[
+## What makes a tsibble?
+### - index
+### - key
+### - interval
+]
+.right-column[
+Free from specifying time frequency
+
+```{r tsibble, echo = TRUE}
+```
+
+When `regular = TRUE` (by default), it automatically recognizes the time interval based on the index representation from year to day, to nanosecond.
+
+But if you wanna specify the interval, check out the low-level constructor `build_tsibble()`.
+]
+
+---
+
+.left-column[
+## What makes a tsibble?
+### - index
+### - key
+### - interval
+### - tsibble
+]
+.right-column[
+**Arranging the key and index from past to future**
+```{r print-tsibble, echo = TRUE}
+```
+]
+
+---
+
+class: inverse middle center
+
+<img src="img/tsibble.png" height=150px>
+
+## standing on the shoulders of giants
+
+.animated.bounceInRight[
+```{r tidyverse, comment = ""}
+tidyverse::tidyverse_logo()
+```
+]
+
+???
+
+Stay tight with tidyverse verbs, only introduce necessary new verbs.
+
+---
+
+.left-column[
+## Verbs
+### - filter
+]
+.right-column[
+```{r filter, echo = TRUE}
+```
+]
+
+---
+
+.left-column[
+## Verbs
+### - filter
+### - select
+]
+.right-column[
+Keep the index hang around with the tsibble
+
+```{r select, echo = TRUE}
+```
+
+OR *consciously* leave off the time context by using `.drop = TRUE` or `as_tibble()`.
+]
+
+---
+
+.left-column[
+## Verbs
+### - filter
+### - select
+### - summarise
+]
+.right-column[
+Aggregate over time
+```{r summarise, echo = TRUE}
+```
+Utilize the context and reduce typing, compared to:
+```r
+flights %>% 
+  group_by(sched_dep_datetime) %>% 
+  summarise(avg_delay = mean(dep_delay))
+```
+
+]
+
+---
+
+.left-column[
+## Verbs
+### - filter
+### - select
+### - summarise
+### - index_by*
+]
+.right-column[
+```{r index-by, echo = TRUE}
+```
+* `year()` for yearly aggregation, `yearquarter()` for quarterly, `yearmonth()` for monthly, `yearweek()` for weekly
+* many other lubridate friends
+]
+
+---
+
+class: middle center inverse
+
+background-image: url(img/lego.jpg)
+background: cover
+
+## .bg-col[Glue individual blocks <br> to compose a pipeline]
+
+---
+
+## Upper-tail departure delay performance
+
+```{r quantile, echo = TRUE}
+```
+
+---
+
+```{r draw-qtl, fig.height = 7}
+```
+
+---
+
+.block[
+.flowchart[
+* `index_by() + summarise()` <br> aggregate to hourly data
+]
+]
+
+```r
+us_flights %>% 
+* index_by(dep_datehour = floor_date(sched_dep_datetime, unit = "hour")) %>% 
+* summarise(    
+*   qtl50 = quantile(dep_delay, 0.5),
+*   qtl80 = quantile(dep_delay, 0.8),
+*   qtl95 = quantile(dep_delay, 0.95)
+* )
+```
+
+
+```{r qtl1}
+```
+
+---
+
+.block[
+.flowchart[
+* `index_by() + summarise()` <br> aggregate to hourly data
+* `mutate()` <br> create new variables
+]
+]
+
+```r
+us_flights %>% 
+  index_by(dep_datehour = floor_date(sched_dep_datetime, unit = "hour")) %>% 
+  summarise(    
+    qtl50 = quantile(dep_delay, 0.5),
+    qtl80 = quantile(dep_delay, 0.8),
+    qtl95 = quantile(dep_delay, 0.95)
+  ) %>% 
+* mutate(
+*   hour = hour(dep_datehour), 
+*   wday = wday(dep_datehour, label = TRUE, week_start = 1),
+*   date = as_date(dep_datehour)
+* )
+```
+
+```{r qtl2}
+```
+
+---
+
+.block[
+.flowchart[
+* `index_by() + summarise()` <br> aggregate to hourly data
+* `mutate()` <br> create new variables
+* `gather()` <br> melt to long form
+]
+]
+
+```r
+us_flights %>% 
+  index_by(dep_datehour = floor_date(sched_dep_datetime, unit = "hour")) %>% 
+  summarise(    
+    qtl50 = quantile(dep_delay, 0.5),
+    qtl80 = quantile(dep_delay, 0.8),
+    qtl95 = quantile(dep_delay, 0.95)
+  ) %>% 
+  mutate(
+    hour = hour(dep_datehour), 
+    wday = wday(dep_datehour, label = TRUE, week_start = 1),
+    date = as_date(dep_datehour)
+  ) %>% 
+* gather(key = qtl, value = dep_delay, qtl50:qtl95)
+```
+
+
+```{r qtl3}
+```
+
+---
+
+## A suite of window functions
+
+.pull-left[
+* `slide()`/`slide2()`/`pslide()`: sliding window with overlapping observations
+]
+
+.pull-right[
+![](img/slide.gif)
+]
+
+---
+
+## A suite of window functions
+
+.pull-left[
+* `slide()`/`slide2()`/`pslide()`: sliding window with overlapping observations
+
+
+* `tile()`/`tile2()`/`ptile()`: tiling window without overlapping observations
+]
+
+.pull-right[
+![](img/slide.gif)
+![](img/tile.gif)
+]
+
+---
+
+## A suite of window functions
+
+.pull-left[
+* `slide()`/`slide2()`/`pslide()`: sliding window with overlapping observations
+
+
+* `tile()`/`tile2()`/`ptile()`: tiling window without overlapping observations
+  
+
+* `stretch()`/`stretch2()`/`pstretch()`: fixing an initial window and expanding to include more observations
+]
+
+.pull-right[
+![](img/slide.gif)
+![](img/tile.gif)
+![](img/stretch.gif)
+]
+
+<hr>
+
+Type-stable: `slide()`/`tile()`/`stretch()` (a list) `r icon::fa_plus()` other variants: `*_dbl()`, `*_int()`, `*_lgl()`, `*_chr()`
+
+---
+
+class: inverse middle center
+
+## One more thing ...
+
+---
+
+background-image: url(img/tidyverts.png)
+background-size: 65%
+
+## tidyverts.org
 
 ---
 
 class: inverse middle center
 
 ### Slides created via xaringan `r emo::ji("crossed_swords")` <http://slides.earo.me/bigapple>
+
+### More about tsibble <http://pkg.earo.me/tsibble>
 
 ### Open source <https://github.com/earowang/bigapple>
 

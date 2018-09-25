@@ -1,10 +1,11 @@
-## ---- load-flights-pkgs
+## ---- load-pkgs
 library(lubridate)
 library(tidyverse)
 library(tsibble)
 library(forcats)
+source("R/theme.R")
 
-## ---- load-flights
+## ---- load-data
 flights <- read_rds("data/flights.rds")
 
 ## ---- map-airlines
@@ -35,9 +36,9 @@ ggplot() +
     fill = "white", colour = "grey60") +
   geom_segment(data = map_dat, aes(
     x = origin_lon, y = origin_lat, xend = dest_lon, yend = dest_lat
-  ), alpha = 0.1, size = 0.4, colour = "#762a83") +
+  ), alpha = 0.2, size = 0.5, colour = "#762a83") +
   geom_point(data = map_dat, aes(x = origin_lon, y = origin_lat), 
-    colour = "#a6dba0", size  = 0.7) +
+    colour = "#f1a340", size  = 1.5) +
   coord_map("albers", parameters = c(30, 45)) +
   ggthemes::theme_map()
 
@@ -56,6 +57,23 @@ us_flights <- flights %>%
 
 ## ---- print-tsibble
 us_flights
+
+## ---- dl771
+dl771 <- us_flights %>% 
+  filter(flight == "DL771") %>% 
+  left_join(map_dat) %>% 
+  arrange(sched_dep_datetime)
+
+ggplot() +
+  geom_polygon(data= states, aes(x = long, y = lat, group = group), 
+    fill = "white", colour = "grey60") +
+  geom_segment(data = dl771, aes(
+    x = origin_lon, y = origin_lat, xend = dest_lon, yend = dest_lat
+  ), size = 0.4, colour = "#762a83", arrow = arrow(length = unit(0.1, "inches"))) +
+  geom_point(data = dl771, aes(x = origin_lon, y = origin_lat), 
+    colour = "#f1a340", size  = 1.5) +
+  coord_map("albers", parameters = c(30, 45)) +
+  ggthemes::theme_map()
 
 ## ---- filter
 us_flights %>% 
@@ -85,7 +103,7 @@ delayed_carrier <- us_flights %>%
     Ontime = sum(delayed == 0),
     Delayed = sum(delayed)
   ) %>% 
-  mutate(carrier = reorder(carrier, - (Ontime + Delayed))) %>% 
+  mutate(carrier = fct_reorder(carrier, - (Ontime + Delayed))) %>% 
   gather(delayed, n_flights, Ontime:Delayed)
 
 library(ggmosaic)
@@ -96,33 +114,63 @@ ggplot(data = delayed_carrier) +
   xlab("Carrier") +
   ylab("Delayed")
 
-## ----- n-flights
-dep_delay_fct <- as_factor(c("ontime", "15-60 mins", "60+mins"))
-n_flights <- us_flights %>% 
-  mutate(
-    dep_delay_break = case_when(
-      dep_delay <= 15 ~ dep_delay_fct[1],
-      dep_delay <= 60 ~ dep_delay_fct[2],
-      TRUE ~ dep_delay_fct[3])
-  ) %>% 
-  group_by(dep_delay_break) %>% 
-  index_by(dep_datehour = floor_date(sched_dep_datetime, unit = "hour")) %>% 
-  summarise(n_flight = n()) %>% 
-  mutate(
-    hour = hour(dep_datehour), 
-    wday = wday(dep_datehour, label = TRUE, week_start = 1),
-    date = as_date(dep_datehour)
-  )
+## ---- nyc_flights
+nyc_flights <- us_flights %>% 
+  filter(origin %in% c("JFK", "LGA", "EWR"))
 
-## ---- delayed-facet
-n_flights %>% 
-  ggplot(aes(x = hour, y = n_flight, group = date)) +
-  geom_line(alpha = 0.25, size = 0.4) +
-  facet_grid(dep_delay_break ~ wday, scales = "free_y") +
-  xlab("Time of day") +
-  ylab("Number of flights") +
-  scale_x_continuous(breaks = seq(6, 23, by = 6)) +
-  theme_remark()
+nyc_delay <- nyc_flights %>% 
+  mutate(delayed = dep_delay > 15) %>% 
+  group_by(origin) %>% 
+  index_by(sched_dep_date = as_date(sched_dep_datetime)) %>% 
+  summarise(
+    n_flights = n(),
+    n_delayed = sum(delayed)
+  ) %>% 
+  mutate(pct_delay = n_delayed / n_flights)
+
+nyc_delay %>% 
+  ggplot(aes(x = sched_dep_date, y = pct_delay, colour = origin)) +
+  geom_line() +
+  facet_grid(origin ~ .) +
+  scale_y_continuous(labels = scales::percent) +
+  scale_colour_brewer(palette = "Dark2") +
+  theme(legend.position = "bottom")
+
+## ----- nyc-weekly-ma
+nyc_delay %>% 
+  group_by(origin) %>% 
+  mutate(ma_delay = slide_dbl(
+    pct_delay, mean, .size = 24 * 7, .align = "center-left"
+  )) %>% 
+  ggplot(aes(x = sched_dep_date)) +
+  geom_line(aes(y = pct_delay), colour = "grey80", size = 0.8) +
+  geom_line(aes(y = ma_delay, colour = origin), size = 1) +
+  facet_grid(origin ~ .) +
+  scale_y_continuous(labels = scales::percent) +
+  scale_colour_brewer(palette = "Dark2") +
+  theme(legend.position = "bottom")
+  xlab("Date") +
+  ylab("Departure delay")
+
+## ----- nyc-monthly-ma
+nyc_delay %>% 
+  mutate(yrmth = yearmonth(sched_dep_date)) %>% 
+  group_by(origin, yrmth) %>% 
+  nest() %>% 
+  group_by(origin) %>% 
+  mutate(monthly_ma = slide_dbl(data, 
+    ~ mean(.$pct_delay), .size = 2, .bind = TRUE
+  )) %>% 
+  unnest(key = id(origin)) %>% 
+  ggplot() +
+  geom_line(aes(x = sched_dep_date, y = pct_delay), colour = "grey80", size = 0.8) +
+  geom_line(aes(x = yrmth, y = monthly_ma, colour = origin), size = 1) +
+  facet_grid(origin ~ .) +
+  scale_y_continuous(labels = scales::percent) +
+  scale_colour_brewer(palette = "Dark2") +
+  theme(legend.position = "bottom")
+  xlab("Date") +
+  ylab("Departure delay")
 
 ## ---- quantile
 hr_qtl <- us_flights %>% 
@@ -209,79 +257,3 @@ hr_qtl %>%
   scale_x_continuous(limits = c(0, 23), breaks = seq(6, 23, by = 6)) +
   scale_colour_manual(values = break_cols, guide = FALSE) +
   expand_limits(y = min_y)
-
-## ---- nyc_flights
-nyc_flights <- us_flights %>% 
-  filter(origin %in% c("JFK", "LGA", "EWR"))
-
-nyc_delay <- nyc_flights %>% 
-  mutate(delayed = dep_delay > 15) %>% 
-  group_by(origin) %>% 
-  index_by(sched_dep_date = floor_date(sched_dep_datetime, unit = "hour")) %>% 
-  summarise(
-    n_flights = n(),
-    n_delayed = sum(delayed)
-  ) %>% 
-  mutate(pct_delay = n_delayed / n_flights)
-
-nyc_delay <- fill_na(nyc_delay)
-
-nyc_delay %>% 
-  ggplot(aes(x = sched_dep_date, y = pct_delay, colour = origin)) +
-  geom_line() +
-  facet_grid(origin ~ .) +
-  scale_y_continuous(labels = scales::percent) +
-  scale_colour_brewer(palette = "Dark2") +
-  theme(legend.position = "bottom")
-
-## ----- nyc-weekly-ma
-nyc_delay %>% 
-  group_by(origin) %>% 
-  mutate(ma_delay = slide_dbl(pct_delay, ~ mean(., na.rm = TRUE), .size = 24 * 7, .align = "center-left")) %>% 
-  ggplot(aes(x = sched_dep_date)) +
-  geom_line(aes(y = pct_delay), colour = "grey80", size = 0.8) +
-  geom_line(aes(y = ma_delay, colour = origin), size = 1) +
-  facet_grid(origin ~ .) +
-  scale_y_continuous(labels = scales::percent) +
-  scale_colour_brewer(palette = "Dark2") +
-  theme(legend.position = "bottom")
-  xlab("Date") +
-  ylab("Departure delay")
-
-## ----- nyc-monthly-ma
-nyc_delay %>% 
-  mutate(yrmth = yearmonth(sched_dep_date)) %>% 
-  group_by(origin, yrmth) %>% 
-  nest() %>% 
-  group_by(origin) %>% 
-  mutate(monthly_ma = slide_dbl(data, 
-    ~ mean(.$pct_delay, na.rm = TRUE), .size = 2, .bind = TRUE
-  )) %>% 
-  unnest(key = id(origin)) %>% 
-  ggplot() +
-  geom_line(aes(x = sched_dep_date, y = pct_delay), colour = "grey80", size = 0.8) +
-  geom_line(aes(x = as.POSIXct(yrmth), y = monthly_ma, colour = origin), size = 1) +
-  facet_grid(origin ~ .) +
-  scale_y_continuous(labels = scales::percent) +
-  scale_colour_brewer(palette = "Dark2") +
-  theme(legend.position = "bottom")
-  xlab("Date") +
-  ylab("Departure delay")
-
-## ---- calendar
-library(sugrrants)
-nyc_cal <- nyc_delay %>% 
-  mutate(
-    hour = hour(sched_dep_date), 
-    date = as_date(sched_dep_date)
-  ) %>% 
-  group_by(origin) %>% 
-  frame_calendar(x = hour, y = pct_delay, date = date)
-
-p_cal <- nyc_cal %>% 
-  ggplot(aes(x = .hour, y = .pct_delay, group = date, colour = origin)) +
-  geom_line() +
-  facet_grid(~ origin) +
-  scale_colour_brewer(palette = "Dark2") +
-  theme(legend.position = "bottom")
-prettify(p_cal, label.padding = unit(0.02, "lines"))
