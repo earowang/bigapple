@@ -80,6 +80,18 @@ class: bottom center
 
 ---
 
+```{r dl771, fig.width = 12, fig.height = 8, fig.show = "hide"}
+```
+
+background-image: url(`r fig_chunk("dl771", "svg")`)
+background-size: cover
+
+class: bottom center
+
+# Event-driven data: zoom in to DL771 <br> <br>
+
+---
+
 .pull-left[
 <br>
 <br>
@@ -107,7 +119,7 @@ This data set doesn't fit into:
 * `xts()`
 ]
 
-The underlying structure is a matrix of numeric data with an implicit time index.
+The underlying structure is a numeric matrix with implicit time indices.
 ]
 
 ---
@@ -160,8 +172,9 @@ The underlying structure is a matrix of numeric data with an implicit time index
 <br>
 <br>
 <br>
+<br>
 .animated.bounceInDown[
-.center[<img src="img/tsibble.png" height=250px>]
+.center[<img src="img/tsibble.png" height=230px>]
 ]
 ]
 
@@ -169,11 +182,18 @@ The underlying structure is a matrix of numeric data with an implicit time index
 
 class: inverse middle center
 
-.animated.fadeIn[
-url(https://imgs.xkcd.com/comics/standards.png)
-]
+.pull-left[
+<img src="https://imgs.xkcd.com/comics/standards.png">
 .footnote[
 .red[reference:] [XKCD on "standards"](https://xkcd.com/927/)
+]
+]
+
+--
+
+.pull-right[
+.center[<img src="img/tsibble.png" height=230px>]
+### The 15th time series standard
 ]
 
 ---
@@ -219,8 +239,10 @@ tsibble leverages tibble along with time domain semantics: **index** and **key**
 ```{r tsibble, echo = TRUE}
 ```
 * Supported index types:
-  + `POSIXct`, `Date` & `nanotime`
-  + `yearweek`, `yearmonth` & `yearquarter`
+  + **base**: `POSIXct` & `Date`
+  + **tsibble**: `yearweek`, `yearmonth` & `yearquarter`
+  + **zoo**: `yearmt` & `yearqtr`
+  + **nanotime**: `nanotime`
   + `integer`/`double`
 * Extensible: define `index_valid()` for custom types
 ]
@@ -239,9 +261,9 @@ What's your observational unit over time?
 ```
 
 * Key created via `id()` (identifier)
-  + *empty:* univariate time series (implicitit key)
-  + *single:* univariate or multivariate time series
-  + *multiple:* nested and crossed structures `id(flight, origin | origin_city | orgin_state)`
+  + *empty:* univariate time series (implicitit key) `id()`
+  + *single:* univariate or multivariate time series `id(flight)`
+  + *multiple:* relational structures (nesting or crossing) <br> `id(flight, origin | origin_city_name | orgin_state)`
 
 **tsibble is strict: dinstinct rows identified by index and key.** Use `validate = FALSE` to skip the checks, if you're sure it's a valid input.
 ]
@@ -260,7 +282,7 @@ Free from specifying time frequency
 ```{r tsibble, echo = TRUE}
 ```
 
-When `regular = TRUE` (by default), it automatically recognizes the time interval based on the index representation from year to day, to nanosecond.
+By default `regular = TRUE`, it automatically recognizes the time interval based on the index representation from year to day, to nanosecond.
 
 But if you wanna specify the interval, check out the low-level constructor `build_tsibble()`.
 ]
@@ -293,10 +315,6 @@ class: inverse middle center
 tidyverse::tidyverse_logo()
 ```
 ]
-
-???
-
-Stay tight with tidyverse verbs, only introduce necessary new verbs.
 
 ---
 
@@ -358,9 +376,27 @@ flights %>%
 .right-column[
 ```{r index-by, echo = TRUE}
 ```
-* `year()` for yearly aggregation, `yearquarter()` for quarterly, `yearmonth()` for monthly, `yearweek()` for weekly
-* many other lubridate friends
 ]
+
+---
+
+.left-column[
+## Verbs
+### - filter
+### - select
+### - summarise
+### - index_by*
+]
+.right-column[
+```{r index-sum, echo = TRUE}
+```
+* `year()` for yearly aggregation, `yearquarter()` for quarterly, `yearmonth()` for monthly, `yearweek()` for weekly
+* other lubridate friends: `floor_date()`, `ceiling_date()`
+]
+
+---
+
+Good function names (or verbs) help reason about exploratory data analysis.
 
 ---
 
@@ -369,98 +405,122 @@ class: middle center inverse
 background-image: url(img/lego.jpg)
 background: cover
 
-## .bg-col[Glue individual blocks <br> to compose a pipeline]
+## .bg-col[Glue individual operations <br> to compose a sound pipeline]
 
 ---
 
-## Upper-tail departure delay performance
+.left-column[
+.center[<img src="img/tsibble.png" height=110px>]
+### - carrier
+]
+.right-column[
+## Q: Association b/t ontime performance & carriers?
 
-```{r quantile, echo = TRUE}
+```{r carrier-delayed}
 ```
 
+```{r carrier-mosaic, fig.height = 7}
+```
+]
+
 ---
 
-```{r draw-qtl, fig.height = 7}
+.block[
+.flowchart[
+* `mutate()` <br> create dummy variable
+]
+]
+
+```{r carrier1, echo = TRUE}
 ```
 
 ---
 
 .block[
 .flowchart[
-* `index_by() + summarise()` <br> aggregate to hourly data
+* `mutate()` <br> create dummy variable
+* `index_by() + summarise()` <br> aggregate to annual data
 ]
 ]
 
-```r
-us_flights %>% 
-* index_by(dep_datehour = floor_date(sched_dep_datetime, unit = "hour")) %>% 
-* summarise(    
-*   qtl50 = quantile(dep_delay, 0.5),
-*   qtl80 = quantile(dep_delay, 0.8),
-*   qtl95 = quantile(dep_delay, 0.95)
-* )
-```
-
-
-```{r qtl1}
+```{r carrier2, echo = TRUE}
 ```
 
 ---
 
 .block[
 .flowchart[
-* `index_by() + summarise()` <br> aggregate to hourly data
-* `mutate()` <br> create new variables
-]
-]
-
-```r
-us_flights %>% 
-  index_by(dep_datehour = floor_date(sched_dep_datetime, unit = "hour")) %>% 
-  summarise(    
-    qtl50 = quantile(dep_delay, 0.5),
-    qtl80 = quantile(dep_delay, 0.8),
-    qtl95 = quantile(dep_delay, 0.95)
-  ) %>% 
-* mutate(
-*   hour = hour(dep_datehour), 
-*   wday = wday(dep_datehour, label = TRUE, week_start = 1),
-*   date = as_date(dep_datehour)
-* )
-```
-
-```{r qtl2}
-```
-
----
-
-.block[
-.flowchart[
-* `index_by() + summarise()` <br> aggregate to hourly data
-* `mutate()` <br> create new variables
+* `mutate()` <br> create dummy variable
+* `index_by() + summarise()` <br> aggregate to annual data
 * `gather()` <br> melt to long form
 ]
 ]
 
-```r
-us_flights %>% 
-  index_by(dep_datehour = floor_date(sched_dep_datetime, unit = "hour")) %>% 
-  summarise(    
-    qtl50 = quantile(dep_delay, 0.5),
-    qtl80 = quantile(dep_delay, 0.8),
-    qtl95 = quantile(dep_delay, 0.95)
-  ) %>% 
-  mutate(
-    hour = hour(dep_datehour), 
-    wday = wday(dep_datehour, label = TRUE, week_start = 1),
-    date = as_date(dep_datehour)
-  ) %>% 
-* gather(key = qtl, value = dep_delay, qtl50:qtl95)
+```{r carrier3, echo = TRUE}
 ```
 
+---
 
-```{r qtl3}
+.left-column[
+.center[<img src="img/tsibble.png" height=110px>]
+### - carrier
+]
+.right-column[
+## Mosaic plot
+
+```{r mosaic-code, eval = FALSE, echo = TRUE}
 ```
+
+```{r smaller-mosaic, ref.label = "carrier-mosaic", fig.height = 5}
+```
+]
+
+---
+
+.left-column[
+.center[<img src="img/tsibble.png" height=110px>]
+### - carrier
+### - nyc
+]
+.right-column[
+## Q: Temporal trend of delay % in New York?
+```{r nyc-flights}
+```
+```{r nyc-delay, results = "hide"}
+```
+```{r nyc-monthly-1, results = "hide"}
+```
+```{r nyc-monthly-2, results = "hide"}
+```
+```{r nyc-monthly-plot, fig.height = 7}
+```
+]
+
+---
+
+.left-column[
+.center[<img src="img/tsibble.png" height=110px>]
+### - carrier
+### - nyc
+]
+.right-column[
+```{r nyc-flights, echo = TRUE}
+```
+```{r nyc-delay, echo = TRUE}
+```
+]
+
+---
+
+.left-column[
+.center[<img src="img/tsibble.png" height=110px>]
+### - carrier
+### - nyc
+]
+.right-column[
+```{r nyc-delay-plot, fig.height = 7}
+```
+]
 
 ---
 
@@ -510,9 +570,107 @@ us_flights %>%
 ![](img/stretch.gif)
 ]
 
-<hr>
+<hr> 
+
+`purrr`-like syntax: `~ mean(.x)`
 
 Type-stable: `slide()`/`tile()`/`stretch()` (a list) `r icon::fa_plus()` other variants: `*_dbl()`, `*_int()`, `*_lgl()`, `*_chr()`
+
+---
+
+.left-column[
+.center[<img src="img/tsibble.png" height=110px>]
+### - carrier
+### - nyc
+]
+.right-column[
+## Fixed window size
+
+```{r nyc-weekly-ma, echo = TRUE}
+```
+]
+
+---
+
+.left-column[
+.center[<img src="img/tsibble.png" height=110px>]
+### - carrier
+### - nyc
+]
+.right-column[
+```{r nyc-weekly-plot, fig.height = 7}
+```
+]
+
+---
+
+.left-column[
+.center[<img src="img/tsibble.png" height=110px>]
+### - carrier
+### - nyc
+]
+.right-column[
+## Flexible calendar period
+
+```{r nyc-monthly-1, echo = TRUE}
+```
+]
+
+---
+
+.left-column[
+.center[<img src="img/tsibble.png" height=110px>]
+### - carrier
+### - nyc
+]
+.right-column[
+## Flexible calendar period
+
+```{r nyc-monthly-2, echo = TRUE}
+```
+]
+
+---
+
+.left-column[
+.center[<img src="img/tsibble.png" height=110px>]
+### - carrier
+### - nyc
+]
+.right-column[
+```{r nyc-monthly-plot, fig.height = 7}
+```
+]
+
+---
+
+.left-column[
+.center[<img src="img/tsibble.png" height=110px>]
+### - carrier
+### - nyc
+### - upper tail
+]
+.right-column[
+## Q: Upper-tail delay behaviours
+
+```{r quantile}
+```
+```{r draw-qtl, fig.height = 8}
+```
+]
+
+---
+
+.left-column[
+.center[<img src="img/tsibble.png" height=110px>]
+### - carrier
+### - nyc
+### - upper tail
+]
+.right-column[
+```{r quantile, echo = TRUE}
+```
+]
 
 ---
 
