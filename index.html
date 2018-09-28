@@ -86,14 +86,23 @@ glimpse(flights)
 
 ---
 
-.pull-left[
-* heterogeneous data types
-* irregular time interval
-]
-.pull-right[
-* multiple measured variables
-* multiple grouping variables
-]
+
+
+background-image: url(figure/dl771-1.svg)
+background-size: cover
+
+class: bottom center
+
+# Event-driven data: zoom in to DL771 &lt;br&gt; &lt;br&gt;
+
+???
+
+event data --&gt; slide into time series analysis
+
+---
+
+## Timestamped data: sliding into time series analysis
+
 
 ```
 #&gt; # A tibble: 5,548,445 x 22
@@ -121,14 +130,29 @@ glimpse(flights)
 
 ---
 
+.pull-left[
+&lt;br&gt;
+&lt;br&gt;
+&lt;br&gt;
+&lt;br&gt;
+&lt;br&gt;
+&lt;br&gt;
+&lt;br&gt;
+## Get ready for time series analysis?
+]
 
-
-background-image: url(figure/dl771-1.svg)
-background-size: cover
-
-class: bottom center
-
-# Event-driven data: zoom in to DL771 &lt;br&gt; &lt;br&gt;
+.pull-right[
+&lt;br&gt;
+&lt;br&gt;
+&lt;br&gt;
+&lt;br&gt;
+&lt;br&gt;
+This data set features:
+* heterogeneous data types
+* irregular time interval
+* multiple measured variables
+* multiple grouping variables
+]
 
 ---
 
@@ -143,15 +167,13 @@ class: bottom center
 ## Get ready for time series analysis?
 ]
 
---
-
 .pull-right[
 &lt;br&gt;
 &lt;br&gt;
 &lt;br&gt;
 &lt;br&gt;
 &lt;br&gt;
-This data set doesn't fit into:
+But it doesn't fit into:
 
 .x[
 * `ts()`
@@ -182,7 +204,7 @@ The underlying structure is a numeric matrix with implicit time indices.
 &lt;br&gt;
 &lt;br&gt;
 .animated.hinge[
-This data set doesn't fit into:
+But it doesn't fit into:
 
 .x[
 * `ts()`
@@ -190,7 +212,7 @@ This data set doesn't fit into:
 * `xts()`
 ]
 
-The underlying structure is a matrix of numeric data with an implicit time index.
+The underlying structure is a numeric matrix with implicit time indices.
 ]
 ]
 
@@ -383,6 +405,10 @@ us_flights
 #&gt; #   late_aircraft_delay &lt;dbl&gt;
 ```
 ]
+
+---
+
+A tsibble consists of a time index, key and other measured variables in a data-centric format, which is built on top of the tibble.
 
 ---
 
@@ -863,7 +889,7 @@ nyc_delay
 
 &lt;hr&gt; 
 
-`purrr`-like syntax: `~ mean(.x)`
+`purrr`-like interface: `~ mean(.x)`
 
 Type-stable: `slide()`/`tile()`/`stretch()` (a list) <i class="fas  fa-plus "></i> other variants: `*_dbl()`, `*_int()`, `*_lgl()`, `*_chr()`
 
