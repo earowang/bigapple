@@ -263,7 +263,7 @@ tsibble leverages tibble along with time domain semantics: **index** and **key**
 * Supported index types:
   + **base**: `POSIXct` & `Date`
   + **tsibble**: `yearweek`, `yearmonth` & `yearquarter`
-  + **zoo**: `yearmt` & `yearqtr`
+  + **zoo**: `yearmth` & `yearqtr`
   + **nanotime**: `nanotime`
   + `integer`/`double`
 * Extensible: define `index_valid()` for custom types
@@ -435,17 +435,30 @@ background: cover
 
 ---
 
+```{r carrier-delayed, include = FALSE}
+```
+
+```{r carrier-mosaic, fig.height = 7, fig.show = "hide"}
+```
+
+```{r carrier-mosaic-bg, fig.height = 7, fig.show = "hide"}
+```
+
+background-image: url(`r fig_chunk("carrier-mosaic-bg", "svg")`)
+background-size: cover
+
+class: inverse middle center
+
+## .bg-col[Q: Association <br> b/t ontime performance & carriers?]
+
+---
+
 .left-column[
 .center[<img src="img/tsibble.png" height=110px>]
 ### - carrier
 ]
 .right-column[
-## Q: Association b/t ontime performance & carriers?
-
-```{r carrier-delayed}
-```
-
-```{r carrier-mosaic, fig.height = 7}
+```{r carrier-delayed, echo = TRUE}
 ```
 ]
 
@@ -503,13 +516,6 @@ background: cover
 
 ---
 
-.left-column[
-.center[<img src="img/tsibble.png" height=110px>]
-### - carrier
-### - nyc
-]
-.right-column[
-## Q: Temporal trend of delay % in New York?
 ```{r nyc-flights}
 ```
 ```{r nyc-delay, results = "hide"}
@@ -518,9 +524,15 @@ background: cover
 ```
 ```{r nyc-monthly-2, results = "hide"}
 ```
-```{r nyc-monthly-plot, fig.height = 7}
+```{r nyc-monthly-plot-bg, fig.height = 7, fig.show = "hide"}
 ```
-]
+
+background-image: url(`r fig_chunk("nyc-monthly-plot-bg", "svg")`)
+background-size: cover
+
+class: inverse middle center
+
+## .bg-col[Q: Temporal trend <br> of delay % in New York?]
 
 ---
 
@@ -544,7 +556,7 @@ background: cover
 ### - nyc
 ]
 .right-column[
-```{r nyc-delay-plot, fig.height = 7}
+```{r nyc-delay-plot, fig.height = 9}
 ```
 ]
 
@@ -624,7 +636,7 @@ Type-stable: `slide()`/`tile()`/`stretch()` (a list) `r icon::fa_plus()` other v
 ### - nyc
 ]
 .right-column[
-```{r nyc-weekly-plot, fig.height = 7}
+```{r nyc-weekly-plot, fig.height = 9}
 ```
 ]
 
@@ -664,26 +676,25 @@ Type-stable: `slide()`/`tile()`/`stretch()` (a list) `r icon::fa_plus()` other v
 ### - nyc
 ]
 .right-column[
-```{r nyc-monthly-plot, fig.height = 7}
+```{r nyc-monthly-plot, fig.height = 9}
 ```
 ]
 
 ---
 
-.left-column[
-.center[<img src="img/tsibble.png" height=110px>]
-### - carrier
-### - nyc
-### - upper tail
-]
-.right-column[
-## Q: Upper-tail delay behaviours
+```{r quantile, include = FALSE}
+```
+```{r draw-qtl-prep}
+```
+```{r draw-qtl-bg, fig.height = 7, fig.show = "hide"}
+```
 
-```{r quantile}
-```
-```{r draw-qtl, fig.height = 8}
-```
-]
+background-image: url(`r fig_chunk("draw-qtl-bg", "svg")`)
+background-size: cover
+
+class: inverse middle center
+
+## .bg-col[Q: Upper-tail delay behaviours]
 
 ---
 
@@ -700,16 +711,27 @@ Type-stable: `slide()`/`tile()`/`stretch()` (a list) `r icon::fa_plus()` other v
 
 ---
 
-class: inverse middle center
-
-## One more thing ...
+.left-column[
+.center[<img src="img/tsibble.png" height=110px>]
+### - carrier
+### - nyc
+### - upper tail
+]
+.right-column[
+```{r draw-qtl, fig.height = 9}
+```
+]
 
 ---
 
+class: inverse middle center
+
+## Roadmap
+
+tidyverts.org
+
 background-image: url(img/tidyverts.png)
 background-size: 65%
-
-## tidyverts.org
 
 ---
 

@@ -108,9 +108,24 @@ delayed_carrier <- us_flights %>%
     Delayed = sum(delayed)
   ) %>% 
   gather(delayed, n_flights, Ontime:Delayed)
+delayed_carrier
+
+## ----- carrier-mosaic-bg
+library(ggmosaic)
+delayed_carrier %>% 
+  mutate(carrier = fct_reorder(carrier, -n_flights)) %>% 
+  ggplot() +
+    geom_mosaic(
+      aes(x = product(carrier), fill = delayed, weight = n_flights),
+      alpha = 0.2
+    ) +
+    scale_fill_brewer(palette = "Dark2", name = "Delayed") +
+    scale_x_productlist(name = "Carrier") +
+    scale_y_productlist(name = "Delayed") +
+    theme(legend.position = "bottom") +
+    theme_remark()
 
 ## ----- carrier-mosaic
-library(ggmosaic)
 delayed_carrier %>% 
   mutate(carrier = fct_reorder(carrier, -n_flights)) %>% 
   ggplot() +
@@ -219,6 +234,19 @@ nyc_monthly <- nyc_lst %>%
   unnest(key = id(origin)) 
 nyc_monthly
 
+## ----- nyc-monthly-plot-bg
+nyc_monthly %>% 
+  ggplot() +
+  geom_line(aes(x = sched_dep_date, y = pct_delay), colour = "grey80", size = 0.8) +
+  geom_line(aes(x = yrmth, y = monthly_ma, colour = origin), size = 1, alpha = 0.8) +
+  facet_grid(origin ~ .) +
+  scale_y_continuous(labels = scales::percent, limits = c(0, 1)) +
+  scale_colour_brewer(palette = "Dark2") +
+  theme(legend.position = "bottom") +
+  theme_remark() +
+  xlab("Date") +
+  ylab("Departure delay")
+
 ## ----- nyc-monthly-plot
 nyc_monthly %>% 
   ggplot() +
@@ -246,8 +274,9 @@ hr_qtl <- us_flights %>%
     date = as_date(dep_datehour)
   ) %>% 
   gather(key = qtl, value = dep_delay, qtl50:qtl95)
+hr_qtl
 
-## ---- draw-qtl
+## ---- draw-qtl-prep
 break_cols <- c(
   "qtl95" = "#d7301f", 
   "qtl80" = "#fc8d59", 
@@ -265,11 +294,29 @@ min_y <- hr_qtl %>%
   pull(dep_delay) %>%
   min()
 
+## ---- draw-qtl-bg
 hr_qtl %>% 
   filter(hour(dep_datehour) > 4) %>% 
   ggplot(aes(x = hour, y = dep_delay, group = date, colour = qtl)) +
   geom_hline(yintercept = 15, colour = "#9ecae1", size = 2) +
-  geom_line(alpha = 0.5) +
+  geom_line(alpha = 0.1) +
+  facet_grid(
+    qtl ~ wday, scales = "free_y", 
+    labeller = labeller(qtl = as_labeller(qtl_label))
+  ) +
+  xlab("Time of day") +
+  ylab("Depature delay") + 
+  scale_x_continuous(limits = c(0, 23), breaks = seq(6, 23, by = 6)) +
+  scale_colour_manual(values = break_cols, guide = FALSE) +
+  expand_limits(y = min_y) +
+  theme_remark()
+
+## ---- draw-qtl
+hr_qtl %>% 
+  filter(hour(dep_datehour) > 4) %>% 
+  ggplot(aes(x = hour, y = dep_delay, group = date, colour = qtl)) +
+  geom_hline(yintercept = 15, colour = "#9ecae1", size = 2) +
+  geom_line(alpha = 0.8) +
   facet_grid(
     qtl ~ wday, scales = "free_y", 
     labeller = labeller(qtl = as_labeller(qtl_label))
