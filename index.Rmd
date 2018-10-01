@@ -1,6 +1,6 @@
 ---
 title: "Tidy your time series analysis <br> with tsibble"
-type: "seminar"
+type: "meetup"
 author: "<br> Earo Wang <br> <i class='fab fa-twitter' style='color:#6CADDE'></i> <i class='fab fa-github'></i> @earowang"
 date: "4 October 2018 <br> slides at <http://slides.earo.me/bigapple>"
 output:
@@ -326,9 +326,13 @@ But if you wanna specify the interval, check out the low-level constructor `buil
 
 ---
 
-A tsibble consists of a time index, key and other measured variables in a data-centric format, which is built on top of the tibble.
+class: middle
 
-* heterogeneous 
+.large[A tsibble consists of a *time index*, *key* and other *measured variables* in a **data-centric** format, which is built on top of the tibble.]
+
+* arbitrary index support
+* nesting and crossing data structures
+* heterogeneous data types
 * list-column
 
 ---
@@ -431,7 +435,9 @@ background-image: url(img/lego.jpg)
 background: cover
 
 * Good function names (or verbs) help reason about exploratory data analysis.
-* `%>%` chains individual operations to compose a sound pipeline
+* Reduce cognitive load and easy transition from tidyverse to time series analysis.
+* `%>%` chains individual verbs to compose a sound pipeline.
+* Empower users to concentrate on data analysis, free from implementation.
 
 ---
 
@@ -445,11 +451,12 @@ background: cover
 ```
 
 background-image: url(`r fig_chunk("carrier-mosaic-bg", "svg")`)
-background-size: cover
+background-size: 130%
+background-position: -200px -50px
 
 class: inverse middle center
 
-## .bg-col[Q: Association <br> b/t ontime performance & carriers?]
+## .bg-col[Annual carrier on-time performance]
 
 ---
 
@@ -528,11 +535,12 @@ class: inverse middle center
 ```
 
 background-image: url(`r fig_chunk("nyc-monthly-plot-bg", "svg")`)
-background-size: cover
+background-size: 130%
+background-position: -200px -50px
 
 class: inverse middle center
 
-## .bg-col[Q: Temporal trend <br> of delay % in New York?]
+## .bg-col[Daily delay percentages in New York]
 
 ---
 
@@ -690,11 +698,12 @@ Type-stable: `slide()`/`tile()`/`stretch()` (a list) `r icon::fa_plus()` other v
 ```
 
 background-image: url(`r fig_chunk("draw-qtl-bg", "svg")`)
-background-size: cover
+background-size: 130%
+background-position: -200px -50px
 
 class: inverse middle center
 
-## .bg-col[Q: Upper-tail delay behaviours]
+## .bg-col[Hourly upper-tail delay behaviours]
 
 ---
 

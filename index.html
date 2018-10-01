@@ -408,9 +408,13 @@ us_flights
 
 ---
 
-A tsibble consists of a time index, key and other measured variables in a data-centric format, which is built on top of the tibble.
+class: middle
 
-* heterogeneous 
+.large[A tsibble consists of a *time index*, *key* and other *measured variables* in a **data-centric** format, which is built on top of the tibble.]
+
+* arbitrary index support
+* nesting and crossing data structures
+* heterogeneous data types
 * list-column
 
 ---
@@ -619,7 +623,9 @@ background-image: url(img/lego.jpg)
 background: cover
 
 * Good function names (or verbs) help reason about exploratory data analysis.
-* `%&gt;%` chains individual operations to compose a sound pipeline
+* Reduce cognitive load and easy transition from tidyverse to time series analysis.
+* `%&gt;%` chains individual verbs to compose a sound pipeline.
+* Empower users to concentrate on data analysis, free from implementation.
 
 ---
 
@@ -630,11 +636,12 @@ background: cover
 
 
 background-image: url(figure/carrier-mosaic-bg-1.svg)
-background-size: cover
+background-size: 130%
+background-position: -200px -50px
 
 class: inverse middle center
 
-## .bg-col[Q: Association &lt;br&gt; b/t ontime performance &amp; carriers?]
+## .bg-col[Annual carrier on-time performance]
 
 ---
 
@@ -816,11 +823,12 @@ delayed_carrier %&gt;%
 
 
 background-image: url(figure/nyc-monthly-plot-bg-1.svg)
-background-size: cover
+background-size: 130%
+background-position: -200px -50px
 
 class: inverse middle center
 
-## .bg-col[Q: Temporal trend &lt;br&gt; of delay % in New York?]
+## .bg-col[Daily delay percentages in New York]
 
 ---
 
@@ -1064,11 +1072,12 @@ nyc_monthly
 
 
 background-image: url(figure/draw-qtl-bg-1.svg)
-background-size: cover
+background-size: 130%
+background-position: -200px -50px
 
 class: inverse middle center
 
-## .bg-col[Q: Upper-tail delay behaviours]
+## .bg-col[Hourly upper-tail delay behaviours]
 
 ---
 

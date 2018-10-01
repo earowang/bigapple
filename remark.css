@@ -89,6 +89,7 @@ ul li li:before {
 .bg-col{
   display: inline-flex;
   background-color: #998ec3;
+  padding: 5px;
 }
 
 .red { color: #D00000; }
