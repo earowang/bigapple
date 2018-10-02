@@ -5,7 +5,6 @@
     <meta charset="utf-8">
     <meta name="author" content="  Earo Wang     @earowang" />
     <link href="index_files/remark-css/default.css" rel="stylesheet" />
-    <link href="index_files/font-awesome/css/fontawesome-all.min.css" rel="stylesheet" />
     <link rel="stylesheet" href="remark.css" type="text/css" />
   </head>
   <body>
@@ -617,15 +616,16 @@ us_flights %&gt;%
 
 ---
 
-class: center inverse
+class: middle inverse
 
 background-image: url(img/lego.jpg)
 background: cover
 
-* Good function names (or verbs) help reason about exploratory data analysis.
-* Reduce cognitive load and easy transition from tidyverse to time series analysis.
-* `%&gt;%` chains individual verbs to compose a sound pipeline.
-* Empower users to concentrate on data analysis, free from implementation.
+### .bg-col[Each verb is self-exploratory and helps reason about data analysis.]
+
+### .bg-col[Common tidyverse verbs help reduce cognitive load and make easy transition to tidy time series analysis.]
+
+### .bg-col[The pipe operator %&gt;% chains a sequence of verbs to compose a sound pipeline.]
 
 ---
 
@@ -935,7 +935,7 @@ nyc_delay
 
 `purrr`-like interface: `~ mean(.x)`
 
-Type-stable: `slide()`/`tile()`/`stretch()` (a list) <i class="fas  fa-plus "></i> other variants: `*_dbl()`, `*_int()`, `*_lgl()`, `*_chr()`
+Type-stable: `slide()`/`tile()`/`stretch()` (a list) &lt;i class="fas fa-plus"&gt;&lt;/i&gt; other variants: `*_dbl()`, `*_int()`, `*_lgl()`, `*_chr()`
 
 ---
 
@@ -1006,7 +1006,7 @@ nyc_lst
 ```
 #&gt; # A tibble: 36 x 3
 #&gt;   origin    yrmth data              
-#&gt; * &lt;chr&gt;     &lt;mth&gt; &lt;list&gt;            
+#&gt;   &lt;chr&gt;     &lt;mth&gt; &lt;list&gt;            
 #&gt; 1 EWR    2017 Jan &lt;tsibble [31 × 4]&gt;
 #&gt; 2 EWR    2017 Feb &lt;tsibble [28 × 4]&gt;
 #&gt; 3 EWR    2017 Mar &lt;tsibble [31 × 4]&gt;
@@ -1135,18 +1135,35 @@ hr_qtl
 
 ---
 
-class: inverse middle center
+class: middle inverse
 
-## Roadmap
+background-image: url(img/lego.jpg)
+background: cover
 
-tidyverts.org
+### .bg-col[Break up a big problem to into manageable blocks]
 
-background-image: url(img/tidyverts.png)
-background-size: 65%
+### .bg-col[Generate human-readable and error-prone analysis workflow]
+
+---
+
+class: inverse
+
+## Look ahead
+
+&lt;br&gt;
+&lt;br&gt;
+
+.center[
+&lt;img src="img/tsibble.png" height=230px&gt;
+&lt;img src="img/fable.png" height=230px&gt;
+### [tidyverts.org](tidyverts.org)
+]
 
 ---
 
 class: inverse middle center
+
+### Joint work with &lt;i class="fas fa-users"&gt;&lt;/i&gt; [Di Cook](http://dicook.org) &amp; [Rob J Hyndman](http://robjhyndman.com)
 
 ### Slides created via xaringan ⚔️ &lt;http://slides.earo.me/bigapple&gt;
 

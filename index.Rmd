@@ -429,25 +429,26 @@ flights %>%
 
 ---
 
-class: center inverse
+class: middle inverse
 
 background-image: url(img/lego.jpg)
 background: cover
 
-* Good function names (or verbs) help reason about exploratory data analysis.
-* Reduce cognitive load and easy transition from tidyverse to time series analysis.
-* `%>%` chains individual verbs to compose a sound pipeline.
-* Empower users to concentrate on data analysis, free from implementation.
+### .bg-col[Each verb is self-exploratory and helps reason about data analysis.]
+
+### .bg-col[Common tidyverse verbs help reduce cognitive load and make easy transition to tidy time series analysis.]
+
+### .bg-col[The pipe operator %>% chains a sequence of verbs to compose a sound pipeline.]
 
 ---
 
 ```{r carrier-delayed, include = FALSE}
 ```
 
-```{r carrier-mosaic, fig.height = 7, fig.show = "hide"}
+```{r carrier-mosaic-bg, fig.height = 7, fig.show = "hide"}
 ```
 
-```{r carrier-mosaic-bg, fig.height = 7, fig.show = "hide"}
+```{r carrier-mosaic, fig.height = 7, fig.show = "hide"}
 ```
 
 background-image: url(`r fig_chunk("carrier-mosaic-bg", "svg")`)
@@ -620,7 +621,7 @@ class: inverse middle center
 
 `purrr`-like interface: `~ mean(.x)`
 
-Type-stable: `slide()`/`tile()`/`stretch()` (a list) `r icon::fa_plus()` other variants: `*_dbl()`, `*_int()`, `*_lgl()`, `*_chr()`
+Type-stable: `slide()`/`tile()`/`stretch()` (a list) <i class="fas fa-plus"></i> other variants: `*_dbl()`, `*_int()`, `*_lgl()`, `*_chr()`
 
 ---
 
@@ -733,18 +734,35 @@ class: inverse middle center
 
 ---
 
-class: inverse middle center
+class: middle inverse
 
-## Roadmap
+background-image: url(img/lego.jpg)
+background: cover
 
-tidyverts.org
+### .bg-col[Break up a big problem to into manageable blocks]
 
-background-image: url(img/tidyverts.png)
-background-size: 65%
+### .bg-col[Generate human-readable and error-prone analysis workflow]
+
+---
+
+class: inverse
+
+## Look ahead
+
+<br>
+<br>
+
+.center[
+<img src="img/tsibble.png" height=230px>
+<img src="img/fable.png" height=230px>
+### [tidyverts.org](tidyverts.org)
+]
 
 ---
 
 class: inverse middle center
+
+### Joint work with <i class="fas fa-users"></i> [Di Cook](http://dicook.org) & [Rob J Hyndman](http://robjhyndman.com)
 
 ### Slides created via xaringan `r emo::ji("crossed_swords")` <http://slides.earo.me/bigapple>
 
