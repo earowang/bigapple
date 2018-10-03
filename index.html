@@ -33,9 +33,13 @@ background-size: cover
 
 class: bottom center
 
-# 2017 US airline traffic
+# 2017 US airline traffic: 22562 flights
 
 *data source: [US Bureau of Transportation Statistics](https://www.transtats.bts.gov/DL_SelectFields.asp?Table_ID=236)*
+
+???
+
+22,562 flights
 
 ---
 
@@ -87,12 +91,23 @@ glimpse(flights)
 
 
 
+background-image: url(figure/n938dn-1.svg)
+background-size: cover
+
+class: bottom center
+
+# Plane N938DN &lt;br&gt; &lt;br&gt;
+
+---
+
+
+
 background-image: url(figure/dl771-1.svg)
 background-size: cover
 
 class: bottom center
 
-# Event-driven data: zoom in to DL771 &lt;br&gt; &lt;br&gt;
+# Flight DL771 &lt;br&gt; &lt;br&gt;
 
 ???
 
@@ -100,32 +115,36 @@ event data --&gt; slide into time series analysis
 
 ---
 
+.pull-left[
+&lt;br&gt;
+&lt;br&gt;
+&lt;br&gt;
+&lt;br&gt;
+&lt;br&gt;
+&lt;br&gt;
+&lt;br&gt;
 ## Timestamped data: sliding into time series analysis
-
+]
+.pull-right[
+&lt;br&gt;
+&lt;br&gt;
+&lt;br&gt;
+&lt;br&gt;
+&lt;br&gt;
 
 ```
-#&gt; # A tibble: 5,548,445 x 22
-#&gt;   flight sched_dep_datetime  sched_arr_datetime  dep_delay arr_delay
-#&gt;   &lt;chr&gt;  &lt;dttm&gt;              &lt;dttm&gt;                  &lt;dbl&gt;     &lt;dbl&gt;
-#&gt; 1 AA494  2017-01-17 16:19:00 2017-01-17 18:56:00        -3       -14
-#&gt; 2 AA494  2017-01-18 16:19:00 2017-01-18 18:56:00        -5       -35
-#&gt; 3 AA494  2017-01-19 16:19:00 2017-01-19 18:56:00        -8       -30
-#&gt; 4 AA494  2017-01-20 16:19:00 2017-01-20 18:56:00        37        33
-#&gt; 5 AA494  2017-01-21 16:19:00 2017-01-21 18:56:00        13         2
-#&gt; 6 AA494  2017-01-22 16:19:00 2017-01-22 18:56:00        17        25
-#&gt;   carrier tailnum origin dest  air_time distance origin_city_name
-#&gt;   &lt;chr&gt;   &lt;chr&gt;   &lt;chr&gt;  &lt;chr&gt;    &lt;dbl&gt;    &lt;dbl&gt; &lt;chr&gt;           
-#&gt; 1 AA      N583AA  CLT    PHX        244     1773 Charlotte       
-#&gt; 2 AA      N544AA  CLT    PHX        228     1773 Charlotte       
-#&gt; 3 AA      N553AA  CLT    PHX        236     1773 Charlotte       
-#&gt; 4 AA      N191AA  CLT    PHX        252     1773 Charlotte       
-#&gt; 5 AA      N170AA  CLT    PHX        245     1773 Charlotte       
-#&gt; 6 AA      N179AA  CLT    PHX        254     1773 Charlotte       
-#&gt; # ... with 5.548e+06 more rows, and 10 more variables: origin_state &lt;chr&gt;,
-#&gt; #   dest_city_name &lt;chr&gt;, dest_state &lt;chr&gt;, taxi_out &lt;dbl&gt;, taxi_in &lt;dbl&gt;,
-#&gt; #   carrier_delay &lt;dbl&gt;, weather_delay &lt;dbl&gt;, nas_delay &lt;dbl&gt;,
-#&gt; #   security_delay &lt;dbl&gt;, late_aircraft_delay &lt;dbl&gt;
+#&gt; # A tibble: 5,548,445 x 3
+#&gt;   flight origin sched_dep_datetime 
+#&gt;   &lt;chr&gt;  &lt;chr&gt;  &lt;dttm&gt;             
+#&gt; 1 AA494  CLT    2017-01-17 16:19:00
+#&gt; 2 AA494  CLT    2017-01-18 16:19:00
+#&gt; 3 AA494  CLT    2017-01-19 16:19:00
+#&gt; 4 AA494  CLT    2017-01-20 16:19:00
+#&gt; 5 AA494  CLT    2017-01-21 16:19:00
+#&gt; 6 AA494  CLT    2017-01-22 16:19:00
+#&gt; # ... with 5.548e+06 more rows
 ```
+]
 
 ---
 
@@ -333,6 +352,28 @@ us_flights &lt;- flights %&gt;%
   )
 ```
 
+&lt;img src="figure/dl771b-1.svg" style="display: block; margin: auto;" /&gt;
+]
+
+---
+
+
+.left-column[
+## What makes a tsibble?
+### - index
+### - key
+]
+.right-column[
+What's your observational unit over time?
+
+
+```r
+us_flights &lt;- flights %&gt;% 
+  as_tsibble(
+    index = sched_dep_datetime, key = id(flight, origin), 
+    regular = FALSE
+  )
+```
 * Key created via `id()` (identifier)
   + *empty:* univariate time series (implicitit key) `id()`
   + *single:* univariate or multivariate time series `id(flight)`
@@ -479,7 +520,7 @@ us_flights %&gt;%
 ### - select
 ]
 .right-column[
-Keep the index hang around with the tsibble
+Keep the index hanging around with the tsibble
 
 
 ```r
@@ -623,7 +664,7 @@ background: cover
 
 ### .bg-col[Each verb is self-exploratory and helps reason about data analysis.]
 
-### .bg-col[Common tidyverse verbs help reduce cognitive load and make easy transition to tidy time series analysis.]
+### .bg-col[Common tidyverse verbs help reduce cognitive load and make easy transition to time series analysis.]
 
 ### .bg-col[The pipe operator %&gt;% chains a sequence of verbs to compose a sound pipeline.]
 
@@ -660,8 +701,8 @@ delayed_carrier &lt;- us_flights %&gt;%
     Ontime = sum(delayed == 0),
     Delayed = sum(delayed)
   ) %&gt;% 
-  gather(delayed, n_flights, Ontime:Delayed)
-delayed_carrier
+  gather(delayed, n_flights, Ontime:Delayed) %&gt;% 
+  print()
 ```
 
 ```
@@ -799,19 +840,9 @@ us_flights %&gt;%
 ### - carrier
 ]
 .right-column[
-## Mosaic plot
+&lt;img src="figure/carrier-mosaic-1.svg" style="display: block; margin: auto;" /&gt;
 
-
-```r
-library(ggmosaic)
-delayed_carrier %&gt;% 
-  mutate(carrier = fct_reorder(carrier, -n_flights)) %&gt;% 
-  ggplot() +
-    geom_mosaic(aes(x = product(carrier), fill = delayed, 
-      weight = n_flights))
-```
-
-&lt;img src="figure/smaller-mosaic-1.svg" style="display: block; margin: auto;" /&gt;
+&gt; Delta operates most efficiently among those big carriers.
 ]
 
 ---
@@ -853,8 +884,8 @@ nyc_delay &lt;- nyc_flights %&gt;%
     n_flights = n(),
     n_delayed = sum(delayed)
   ) %&gt;% 
-  mutate(pct_delay = n_delayed / n_flights)
-nyc_delay
+  mutate(pct_delay = n_delayed / n_flights) %&gt;% 
+  print()
 ```
 
 ```
@@ -933,7 +964,7 @@ nyc_delay
 
 &lt;hr&gt; 
 
-`purrr`-like interface: `~ mean(.x)`
+`purrr`-like interface: `~ mean(.x)`. Functional programming is always fun!
 
 Type-stable: `slide()`/`tile()`/`stretch()` (a list) &lt;i class="fas fa-plus"&gt;&lt;/i&gt; other variants: `*_dbl()`, `*_int()`, `*_lgl()`, `*_chr()`
 
@@ -982,6 +1013,8 @@ nyc_weekly %&gt;% select(origin, ma_delay)
 ]
 .right-column[
 &lt;img src="figure/nyc-weekly-plot-1.svg" style="display: block; margin: auto;" /&gt;
+
+&gt; Increase the window size to smooth out short-term fluctuations.
 ]
 
 ---
@@ -999,8 +1032,8 @@ nyc_weekly %&gt;% select(origin, ma_delay)
 nyc_lst &lt;- nyc_delay %&gt;% 
   mutate(yrmth = yearmonth(sched_dep_date)) %&gt;% 
   group_by(origin, yrmth) %&gt;% 
-  nest()
-nyc_lst
+  nest() %&gt;% 
+  print()
 ```
 
 ```
@@ -1031,11 +1064,11 @@ nyc_lst
 ```r
 nyc_monthly &lt;- nyc_lst %&gt;% 
   group_by(origin) %&gt;% 
-  mutate(monthly_ma = slide_dbl(data, 
-    ~ mean(.$pct_delay), .size = 2, .bind = TRUE
-  )) %&gt;% 
-  unnest(key = id(origin)) 
-nyc_monthly
+* mutate(monthly_ma = slide_dbl(data,
+*   ~ mean(.$pct_delay), .size = 2, .bind = TRUE
+* )) %&gt;%
+  unnest(key = id(origin)) %&gt;% 
+  print()
 ```
 
 ```
@@ -1063,6 +1096,8 @@ nyc_monthly
 ]
 .right-column[
 &lt;img src="figure/nyc-monthly-plot-1.svg" style="display: block; margin: auto;" /&gt;
+
+&gt; 2-month moving averages highlight a stable long-term trend.
 ]
 
 ---
@@ -1102,8 +1137,8 @@ hr_qtl &lt;- us_flights %&gt;%
     wday = wday(dep_datehour, label = TRUE, week_start = 1),
     date = as_date(dep_datehour)
   ) %&gt;% 
-  gather(key = qtl, value = dep_delay, qtl50:qtl95)
-hr_qtl
+  gather(key = qtl, value = dep_delay, qtl50:qtl95) %&gt;% 
+  print()
 ```
 
 ```
@@ -1131,6 +1166,8 @@ hr_qtl
 ]
 .right-column[
 &lt;img src="figure/draw-qtl-1.svg" style="display: block; margin: auto;" /&gt;
+
+&gt; Travel smart: avoid flying around 6pm during the day.
 ]
 
 ---

@@ -44,9 +44,13 @@ background-size: cover
 
 class: bottom center
 
-# 2017 US airline traffic
+# 2017 US airline traffic: `r NROW(unique(flights$flight))` flights
 
 *data source: [US Bureau of Transportation Statistics](https://www.transtats.bts.gov/DL_SelectFields.asp?Table_ID=236)*
+
+???
+
+22,562 flights
 
 ---
 
@@ -67,6 +71,18 @@ class: bottom center
 
 ---
 
+```{r n938dn, fig.width = 12, fig.height = 8, fig.show = "hide"}
+```
+
+background-image: url(`r fig_chunk("n938dn", "svg")`)
+background-size: cover
+
+class: bottom center
+
+# Plane N938DN <br> <br>
+
+---
+
 ```{r dl771, fig.width = 12, fig.height = 8, fig.show = "hide"}
 ```
 
@@ -75,7 +91,7 @@ background-size: cover
 
 class: bottom center
 
-# Event-driven data: zoom in to DL771 <br> <br>
+# Flight DL771 <br> <br>
 
 ???
 
@@ -83,10 +99,25 @@ event data --> slide into time series analysis
 
 ---
 
+.pull-left[
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
 ## Timestamped data: sliding into time series analysis
-
+]
+.pull-right[
+<br>
+<br>
+<br>
+<br>
+<br>
 ```{r print}
 ```
+]
 
 ---
 
@@ -282,6 +313,23 @@ What's your observational unit over time?
 ```{r tsibble, echo = TRUE}
 ```
 
+```{r dl771b, ref.label = "dl771", fig.height = 5}
+```
+]
+
+---
+
+
+.left-column[
+## What makes a tsibble?
+### - index
+### - key
+]
+.right-column[
+What's your observational unit over time?
+
+```{r tsibble, echo = TRUE}
+```
 * Key created via `id()` (identifier)
   + *empty:* univariate time series (implicitit key) `id()`
   + *single:* univariate or multivariate time series `id(flight)`
@@ -368,7 +416,7 @@ tidyverse::tidyverse_logo()
 ### - select
 ]
 .right-column[
-Keep the index hang around with the tsibble
+Keep the index hanging around with the tsibble
 
 ```{r select, echo = TRUE}
 ```
@@ -436,7 +484,7 @@ background: cover
 
 ### .bg-col[Each verb is self-exploratory and helps reason about data analysis.]
 
-### .bg-col[Common tidyverse verbs help reduce cognitive load and make easy transition to tidy time series analysis.]
+### .bg-col[Common tidyverse verbs help reduce cognitive load and make easy transition to time series analysis.]
 
 ### .bg-col[The pipe operator %>% chains a sequence of verbs to compose a sound pipeline.]
 
@@ -513,13 +561,10 @@ class: inverse middle center
 ### - carrier
 ]
 .right-column[
-## Mosaic plot
-
-```{r mosaic-code, eval = FALSE, echo = TRUE}
+```{r carrier-mosaic, fig.height = 8}
 ```
 
-```{r smaller-mosaic, ref.label = "carrier-mosaic", fig.height = 5}
-```
+> Delta operates most efficiently among those big carriers.
 ]
 
 ---
@@ -565,7 +610,7 @@ class: inverse middle center
 ### - nyc
 ]
 .right-column[
-```{r nyc-delay-plot, fig.height = 9}
+```{r nyc-delay-plot, fig.height = 8}
 ```
 ]
 
@@ -619,7 +664,7 @@ class: inverse middle center
 
 <hr> 
 
-`purrr`-like interface: `~ mean(.x)`
+`purrr`-like interface: `~ mean(.x)`. Functional programming is always fun!
 
 Type-stable: `slide()`/`tile()`/`stretch()` (a list) <i class="fas fa-plus"></i> other variants: `*_dbl()`, `*_int()`, `*_lgl()`, `*_chr()`
 
@@ -645,8 +690,10 @@ Type-stable: `slide()`/`tile()`/`stretch()` (a list) <i class="fas fa-plus"></i>
 ### - nyc
 ]
 .right-column[
-```{r nyc-weekly-plot, fig.height = 9}
+```{r nyc-weekly-plot, fig.height = 8}
 ```
+
+> Increase the window size to smooth out short-term fluctuations.
 ]
 
 ---
@@ -685,8 +732,10 @@ Type-stable: `slide()`/`tile()`/`stretch()` (a list) <i class="fas fa-plus"></i>
 ### - nyc
 ]
 .right-column[
-```{r nyc-monthly-plot, fig.height = 9}
+```{r nyc-monthly-plot, fig.height = 8}
 ```
+
+> 2-month moving averages highlight a stable long-term trend.
 ]
 
 ---
@@ -728,8 +777,10 @@ class: inverse middle center
 ### - upper tail
 ]
 .right-column[
-```{r draw-qtl, fig.height = 9}
+```{r draw-qtl, fig.height = 8}
 ```
+
+> Travel smart: avoid flying around 6pm during the day.
 ]
 
 ---

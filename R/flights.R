@@ -46,7 +46,27 @@ ggplot() +
 glimpse(flights)
 
 ## ---- print
-print(flights, width = 80)
+flights %>% select(flight, origin, sched_dep_datetime)
+
+## ---- n938dn
+n938dn <- flights %>% 
+  filter(tailnum == "N938DN") %>% 
+  left_join(map_dat) %>% 
+  arrange(sched_dep_datetime) %>% 
+  filter(sched_dep_datetime < as_date("20170102"))
+
+ggplot() +
+  geom_polygon(data= states, aes(x = long, y = lat, group = group), 
+    fill = "white", colour = "grey60") +
+  geom_segment(data = n938dn, aes(
+    x = origin_lon, y = origin_lat, xend = dest_lon, yend = dest_lat
+  ), colour = "#762a83", arrow = arrow(length = unit(0.2, "inches"))) +
+  geom_point(data = n938dn, aes(x = origin_lon, y = origin_lat), 
+    colour = "#f1a340", size  = 1.5) +
+  geom_point(data = n938dn, aes(x = dest_lon, y = dest_lat), 
+    colour = "#f1a340", size  = 1.5) +
+  coord_map("albers", parameters = c(30, 45)) +
+  ggthemes::theme_map()
 
 ## ---- dl771
 dl771 <- flights %>% 
@@ -107,8 +127,8 @@ delayed_carrier <- us_flights %>%
     Ontime = sum(delayed == 0),
     Delayed = sum(delayed)
   ) %>% 
-  gather(delayed, n_flights, Ontime:Delayed)
-delayed_carrier
+  gather(delayed, n_flights, Ontime:Delayed) %>% 
+  print()
 
 ## ----- carrier-mosaic-bg
 library(ggmosaic)
@@ -161,14 +181,6 @@ us_flights %>%
   ) %>% 
   gather(delayed, n_flights, Ontime:Delayed) #<<
 
-## ---- mosaic-code
-library(ggmosaic)
-delayed_carrier %>% 
-  mutate(carrier = fct_reorder(carrier, -n_flights)) %>% 
-  ggplot() +
-    geom_mosaic(aes(x = product(carrier), fill = delayed, 
-      weight = n_flights))
-
 ## ---- nyc-flights
 nyc_flights <- us_flights %>% 
   filter(origin %in% c("JFK", "LGA", "EWR"))
@@ -182,8 +194,8 @@ nyc_delay <- nyc_flights %>%
     n_flights = n(),
     n_delayed = sum(delayed)
   ) %>% 
-  mutate(pct_delay = n_delayed / n_flights)
-nyc_delay
+  mutate(pct_delay = n_delayed / n_flights) %>% 
+  print()
 
 ## ---- nyc-delay-plot
 nyc_delay %>% 
@@ -222,17 +234,17 @@ nyc_weekly %>%
 nyc_lst <- nyc_delay %>% 
   mutate(yrmth = yearmonth(sched_dep_date)) %>% 
   group_by(origin, yrmth) %>% 
-  nest()
-nyc_lst
+  nest() %>% 
+  print()
 
 ## ---- nyc-monthly-2
 nyc_monthly <- nyc_lst %>% 
   group_by(origin) %>% 
-  mutate(monthly_ma = slide_dbl(data, 
-    ~ mean(.$pct_delay), .size = 2, .bind = TRUE
-  )) %>% 
-  unnest(key = id(origin)) 
-nyc_monthly
+  mutate(monthly_ma = slide_dbl(data, #<<
+    ~ mean(.$pct_delay), .size = 2, .bind = TRUE#<<
+  )) %>% #<<
+  unnest(key = id(origin)) %>% 
+  print()
 
 ## ----- nyc-monthly-plot-bg
 nyc_monthly %>% 
@@ -273,8 +285,8 @@ hr_qtl <- us_flights %>%
     wday = wday(dep_datehour, label = TRUE, week_start = 1),
     date = as_date(dep_datehour)
   ) %>% 
-  gather(key = qtl, value = dep_delay, qtl50:qtl95)
-hr_qtl
+  gather(key = qtl, value = dep_delay, qtl50:qtl95) %>% 
+  print()
 
 ## ---- draw-qtl-prep
 break_cols <- c(

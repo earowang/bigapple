@@ -138,7 +138,7 @@ code {
   background: linear-gradient(0deg, rgb(115, 115, 130), rgb(18, 11, 49));
   /* background: rgb(18, 11, 49); */
   color: rgb(223, 73, 66);
-  text-shadow: 0 0 20px #333;
+  text-shadow: 0 0 0px #333;
 }
 .inverse h1, .inverse h2 {
   color: #FFBA08;
