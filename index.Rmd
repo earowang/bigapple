@@ -48,10 +48,6 @@ class: bottom center
 
 *data source: [US Bureau of Transportation Statistics](https://www.transtats.bts.gov/DL_SelectFields.asp?Table_ID=236)*
 
-???
-
-22,562 flights
-
 ---
 
 .left-column[
@@ -253,6 +249,10 @@ class: inverse middle center
 ### The 15th time series standard
 ]
 
+???
+
+not sure if tsibble actually covers everyone's use case, but it is more accessible.
+
 ---
 
 .left-column[
@@ -387,6 +387,10 @@ class: middle
 * heterogeneous data types
 * list-column
 
+???
+
+We learned a new time series standard, but what can we do with it?
+
 ---
 
 class: inverse middle center
@@ -411,6 +415,10 @@ tidyverse::tidyverse_logo()
 ```{r filter, echo = TRUE}
 ```
 ]
+
+???
+
+If you're familiar with the tidyverse, no much learning curve.
 
 ---
 
@@ -486,7 +494,7 @@ class: middle inverse
 background-image: url(img/lego.jpg)
 background: cover
 
-### .bg-col[Each verb is self-exploratory and helps reason about data analysis.]
+### .bg-col[Each verb is self-explanatory and helps reason about data analysis.]
 
 ### .bg-col[Common tidyverse verbs help reduce cognitive load and make easy transition to time series analysis.]
 
@@ -665,6 +673,8 @@ class: inverse middle center
 ![](img/tile.gif)
 ![](img/stretch.gif)
 ]
+
+--
 
 <hr> 
 
