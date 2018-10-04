@@ -60,11 +60,15 @@ ggplot() +
     fill = "white", colour = "grey60") +
   geom_segment(data = n938dn, aes(
     x = origin_lon, y = origin_lat, xend = dest_lon, yend = dest_lat
-  ), colour = "#762a83", arrow = arrow(length = unit(0.2, "inches"))) +
+  ), colour = "#762a83", size = 1, alpha = 0.6, 
+    arrow = arrow(length = unit(0.2, "inches"))
+  ) +
   geom_point(data = n938dn, aes(x = origin_lon, y = origin_lat), 
     colour = "#f1a340", size  = 1.5) +
   geom_point(data = n938dn, aes(x = dest_lon, y = dest_lat), 
     colour = "#f1a340", size  = 1.5) +
+  geom_label(data = n938dn, aes(x = origin_lon, y = origin_lat, label = origin_city_name), vjust = 1, hjust = 1.1) +
+  geom_label(data = n938dn, aes(x = dest_lon, y = dest_lat, label = dest_city_name), vjust = 1, hjust = 1.1) +
   coord_map("albers", parameters = c(30, 45)) +
   ggthemes::theme_map()
 
@@ -79,7 +83,9 @@ ggplot() +
     fill = "white", colour = "grey60") +
   geom_segment(data = dl771, aes(
     x = origin_lon, y = origin_lat, xend = dest_lon, yend = dest_lat
-  ), colour = "#762a83", arrow = arrow(length = unit(0.2, "inches"))) +
+  ), colour = "#762a83", size = 1, alpha = 0.6, 
+    arrow = arrow(length = unit(0.2, "inches"))
+  ) +
   geom_point(data = dl771, aes(x = origin_lon, y = origin_lat), 
     colour = "#f1a340", size  = 1.5) +
   geom_point(data = dl771, aes(x = dest_lon, y = dest_lat), 

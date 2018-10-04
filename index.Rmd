@@ -44,7 +44,7 @@ background-size: cover
 
 class: bottom center
 
-# 2017 US airline traffic: `r NROW(unique(flights$flight))` flights
+# 2017 US airline traffic: `r format(NROW(flights), big.mark = ",")` flights
 
 *data source: [US Bureau of Transportation Statistics](https://www.transtats.bts.gov/DL_SelectFields.asp?Table_ID=236)*
 
@@ -79,6 +79,8 @@ background-size: cover
 
 class: bottom center
 
+### .bg-col[.white[When a plane goes somewhere, it comes back.]]
+
 # Plane N938DN <br> <br>
 
 ---
@@ -90,6 +92,8 @@ background-image: url(`r fig_chunk("dl771", "svg")`)
 background-size: cover
 
 class: bottom center
+
+### .bg-col[.white[The flight number isn't tied to a certain path.]]
 
 # Flight DL771 <br> <br>
 

@@ -93,6 +93,7 @@ ul li li:before {
 }
 
 .red { color: #D00000; }
+.white { color: #ffffff; }
 .orange { color: #FFBA08; }
 .blue { color: #3F88C5; }
 .large { font-size: 30px; }
