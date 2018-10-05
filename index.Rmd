@@ -19,7 +19,7 @@ library(knitr)
 options(htmltools.dir.version = FALSE, tibble.width = 60, tibble.print_min = 6)
 opts_chunk$set(
   echo = FALSE, warning = FALSE, message = FALSE, comment = "#>",
-  fig.path = 'figure/', cache.path = 'cache/', fig.align = 'center', 
+  fig.path = 'figure/', cache.path = 'cache/', fig.align = 'center',
   fig.width = 12, fig.show = 'hold', fig.height = 8.5, # 16:9
   cache = TRUE, external = TRUE, dev = 'svglite'
 )
@@ -351,11 +351,11 @@ What's your observational unit over time?
 ```{r tsibble, echo = TRUE}
 ```
 * Key created via `id()` (identifier)
-  + *empty:* univariate time series (implicitit key) `id()`
+  + *empty:* univariate time series (implicit key) `id()`
   + *single:* univariate or multivariate time series `id(flight)`
-  + *multiple:* relational structures (nesting or crossing) <br> `id(flight, origin | origin_city_name | orgin_state)`
+  + *multiple:* relational structures (nesting or crossing) <br> `id(flight, origin | origin_city_name | origin_state)`
 
-**tsibble is strict: dinstinct rows identified by index and key.** Use `validate = FALSE` to skip the checks, if you're sure it's a valid input.
+**tsibble is strict: distinct rows identified by index and key.** Use `validate = FALSE` to skip the checks, if you're sure it's a valid input.
 ]
 
 ---
@@ -466,8 +466,8 @@ Aggregate over time
 ```
 Utilize the context and reduce typing, compared to:
 ```r
-flights %>% 
-  group_by(sched_dep_datetime) %>% 
+flights %>%
+  group_by(sched_dep_datetime) %>%
   summarise(avg_delay = mean(dep_delay))
 ```
 
@@ -679,7 +679,7 @@ class: inverse middle center
 
 
 * `tile()`/`tile2()`/`ptile()`: tiling window without overlapping observations
-  
+
 
 * `stretch()`/`stretch2()`/`pstretch()`: fixing an initial window and expanding to include more observations
 ]
@@ -692,7 +692,7 @@ class: inverse middle center
 
 --
 
-<hr> 
+<hr>
 
 `purrr`-like interface: `~ mean(.x)`. Functional programming is always fun!
 
