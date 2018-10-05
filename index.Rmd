@@ -48,6 +48,10 @@ class: bottom center
 
 *data source: [US Bureau of Transportation Statistics](https://www.transtats.bts.gov/DL_SelectFields.asp?Table_ID=236)*
 
+???
+
+we're looking at time series analysis from EDA perspective, what data we're going to look at?
+
 ---
 
 .left-column[
@@ -65,6 +69,10 @@ class: bottom center
 ```
 ]
 
+???
+
+detailed, and richness
+
 ---
 
 ```{r n938dn, fig.width = 12, fig.height = 8, fig.show = "hide"}
@@ -78,6 +86,10 @@ class: bottom center
 ### .bg-col[.white[When a plane goes somewhere, it comes back.]]
 
 # Plane N938DN <br> <br>
+
+???
+
+tailnum
 
 ---
 
@@ -95,7 +107,7 @@ class: bottom center
 
 ???
 
-event data --> slide into time series analysis
+* flight number is such a weir variable.
 
 ---
 
@@ -118,6 +130,10 @@ event data --> slide into time series analysis
 ```{r print}
 ```
 ]
+
+???
+
+* event data --> slide into time series analysis
 
 ---
 
