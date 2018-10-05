@@ -395,11 +395,11 @@ us_flights &lt;- flights %&gt;%
   )
 ```
 * Key created via `id()` (identifier)
-  + *empty:* univariate time series (implicitit key) `id()`
+  + *empty:* univariate time series (implicit key) `id()`
   + *single:* univariate or multivariate time series `id(flight)`
-  + *multiple:* relational structures (nesting or crossing) &lt;br&gt; `id(flight, origin | origin_city_name | orgin_state)`
+  + *multiple:* relational structures (nesting or crossing) &lt;br&gt; `id(flight, origin | origin_city_name | origin_state)`
 
-**tsibble is strict: dinstinct rows identified by index and key.** Use `validate = FALSE` to skip the checks, if you're sure it's a valid input.
+**tsibble is strict: distinct rows identified by index and key.** Use `validate = FALSE` to skip the checks, if you're sure it's a valid input.
 ]
 
 ---
@@ -603,8 +603,8 @@ us_flights %&gt;%
 ```
 Utilize the context and reduce typing, compared to:
 ```r
-flights %&gt;% 
-  group_by(sched_dep_datetime) %&gt;% 
+flights %&gt;%
+  group_by(sched_dep_datetime) %&gt;%
   summarise(avg_delay = mean(dep_delay))
 ```
 
@@ -979,7 +979,7 @@ nyc_delay &lt;- nyc_flights %&gt;%
 
 
 * `tile()`/`tile2()`/`ptile()`: tiling window without overlapping observations
-  
+
 
 * `stretch()`/`stretch2()`/`pstretch()`: fixing an initial window and expanding to include more observations
 ]
@@ -992,7 +992,7 @@ nyc_delay &lt;- nyc_flights %&gt;%
 
 --
 
-&lt;hr&gt; 
+&lt;hr&gt;
 
 `purrr`-like interface: `~ mean(.x)`. Functional programming is always fun!
 
